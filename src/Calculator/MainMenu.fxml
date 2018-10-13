@@ -44,30 +44,68 @@
             <VBox spacing="2.0">
                <children>
                      <Label text="Focal film distance:" />
-                  <TextField id="focalFilmDistanceField" fx:id="focalFilmDistanceField" prefWidth="50.0" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField id="focalFilmDistanceField" fx:id="focalFilmDistanceField" prefWidth="100.0" />
+                        <ChoiceBox prefWidth="50.0" />
+                     </children>
+                  </HBox>
                   <Separator layoutX="10.0" layoutY="148.0" prefWidth="200.0">
                      <padding>
                         <Insets top="10.0" />
                      </padding>
                   </Separator>
                      <Label text="S2/MFH Distance to Film (lateral):" />
-                  <TextField id="s2ToFilmLateralField" fx:id="s2ToFilmLateralField" prefWidth="50.0" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField id="s2ToFilmLateralField" fx:id="s2ToFilmLateralField" prefWidth="100.0" />
+                        <ChoiceBox prefWidth="50.0" />
+                     </children>
+                  </HBox>
                      <Label text="S2 to MFH (lateral, from film):" />
-                  <TextField id="s2ToMFHLateralFilmField" fx:id="s2ToMFHLateralFilmField" prefWidth="50.0" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField id="s2ToMFHLateralFilmField" fx:id="s2ToMFHLateralFilmField" prefWidth="100.0" />
+                        <ChoiceBox prefWidth="50.0" />
+                     </children>
+                  </HBox>
                   <Separator layoutX="10.0" layoutY="194.0" prefWidth="200.0">
                      <padding>
                         <Insets top="10.0" />
                      </padding>
                   </Separator>
                      <Label text="S2 Distance to Film (A-P):" />
-                  <TextField id="s2ToFilmAPField" fx:id="s2ToFilmAPField" prefWidth="50.0" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField id="s2ToFilmAPField" fx:id="s2ToFilmAPField" prefWidth="100.0" />
+                        <ChoiceBox prefWidth="50.0" />
+                     </children>
+                  </HBox>
                   <Label layoutX="10.0" layoutY="163.0" text="S2 to MFH (A-P, from film):" />
-                  <TextField id="s2ToMFHAPFilmField" fx:id="s2ToMFHAPFilmField" layoutX="10.0" layoutY="182.0" prefWidth="50.0" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField id="s2ToMFHAPFilmField" fx:id="s2ToMFHAPFilmField" layoutX="10.0" layoutY="182.0" prefWidth="100.0" />
+                        <ChoiceBox prefWidth="50.0" />
+                     </children>
+                  </HBox>
                   <Separator prefWidth="200.0">
                      <padding>
                         <Insets top="10.0" />
                      </padding></Separator>
-                     <Button id="calculateButton" fx:id="calculateButton" defaultButton="true" mnemonicParsing="false" onAction="#calculateButtonPressed" text="Calculate" />
+                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                     <children>
+                        <Label text="Result Units:" />
+                        <ChoiceBox prefWidth="75.0" />
+                     </children>
+                  </HBox>
+                  <VBox alignment="CENTER">
+                     <children>
+                           <Button id="calculateButton" fx:id="calculateButton" defaultButton="true" mnemonicParsing="false" onAction="#calculateButtonPressed" text="Calculate" />
+                     </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </VBox>
                </children>
             </VBox>
             <TableView fx:id="resultsTable" HBox.hgrow="ALWAYS">
@@ -75,12 +113,12 @@
                 <TableColumn fx:id="focalFilmDistanceCol" minWidth="-Infinity" prefWidth="100.0" text="Focal film dist." />
                 <TableColumn fx:id="s2ToFilmLateralCol" minWidth="-Infinity" prefWidth="100.0" text="S2 to Film (lat.)" />
                 <TableColumn fx:id="s2ToMFHLateralFilmCol" minWidth="-Infinity" prefWidth="125.0" text="S2 to MFH (lat., film)" />
-                <TableColumn minWidth="-Infinity" prefWidth="100.0" text="True S2 to MFH" />
-                <TableColumn minWidth="-Infinity" prefWidth="100.0" text="S2 to Film (A-P)" />
-                <TableColumn minWidth="-Infinity" prefWidth="105.0" text="True MFH to Film" />
-                <TableColumn minWidth="-Infinity" prefWidth="125.0" text="S2 to MFH (A-P, film)" />
-                <TableColumn minWidth="-Infinity" prefWidth="135.0" text="True S2 to MFH Offset" />
-                <TableColumn minWidth="-Infinity" prefWidth="110.0" text="Rotational Degree" />
+                <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="100.0" text="True S2 to MFH" />
+                <TableColumn fx:id="s2ToFilmAPCol" minWidth="-Infinity" prefWidth="100.0" text="S2 to Film (A-P)" />
+                <TableColumn fx:id="MFHToFilmTrueCol" minWidth="-Infinity" prefWidth="105.0" text="True MFH to Film" />
+                <TableColumn fx:id="s2ToMFHAPFilmCol" minWidth="-Infinity" prefWidth="125.0" text="S2 to MFH (A-P, film)" />
+                <TableColumn fx:id="s2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="135.0" text="True S2 to MFH Offset" />
+                <TableColumn fx:id="rotationalDegreeCol" minWidth="-Infinity" prefWidth="110.0" text="Rotational Degree" />
                 <TableColumn minWidth="-Infinity" prefWidth="110.0" text="STEP 14, FINAL" />
               </columns>
             </TableView>

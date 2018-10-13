@@ -11,21 +11,30 @@
 
 
 Calculations:
-1. Focal film distance (ex. 72 in) - UK
-2. Lateral distance S2/MFH to film (labeled as 'b') (ex. 5 in) - UK
-3. Calculate source-object (labeled as 'a') (subtract 2 from 1)
-4. Lateral S2 to MFH from film (ex. 100 mm) - UK
+1. Focal film distance (ex. 72 in) - UK*
+2. Lateral distance S2/MFH to film (labeled as 'b') (ex. 5 in) - UK*
+3. Calculate lateral source-object (labeled as 'a') (subtract 2 from 1)
+4. Lateral S2 to MFH from film (ex. 100 mm) - UK*
 5. Calculate lateral magnifiaction factor (M = (a + b)/a)
 6. Use magnification factor to find true S2-MFH distance (divide measured by M) (ex. 93.5)
 
-7. Measure S2 to film (ex. 4 in) - UK
-8. Add S2 to film to actual S2-MFH (from step 6) to get true MFH to film
-9. Measure S2 to MFH on A-P film (ex. 10 mm) - UK
-10. Calculate A-P source-object ('a') by adding S2 to film and true S2-MFH (from lateral) (ex. 195.1 mm)
-11. Calculate A-P magnifiaction factor by using focal film distance 'b' and A-P soure-object 'a'
+7. Measure S2 to film (ex. 4 in) - UK*
+8. Add S2 to film to actual S2-MFH (from step 6) to get true MFH to film (ex. 195.1mm)
+
+9. Measure S2 to MFH on A-P film (ex. 10 mm) - UK*
+
+10**. Find AP source-object by subtracting MFH to Film (step 8) from focal film distance (step 1)
+11**. Use mag formula (M = (a + b) / a) to find AP mag factor where a is AP source-object (step 10) 
+      and b is MFH to film (step 8)
 12. Use magnifiaction factor to find true A-P offset distance from S2 to MFH (divide measured amount by mag factor) (ex. 8.9)
 13. Find rotational degree by sin (theta) = opposite/hypotenuse to get rotation with S2 as axis (ex. 5.5)
+    where opposite is true S2 to MFH offset distance (A-P) and hypotenuse is true S2 to MFH
 
-14. 
+14. TBD
 
-UK = unknown, needs to be inputted into program
+*UK = unknown, needs to be inputted into program
+
+**Explanation of step 10 and 11:
+We're trying to find mag factor using M = (a+b)/a.
+a is the source-object distance (tube to MFH) and b is MFH to film distance.
+b was found in step 8, a is calculated by using focal film distance and subtracting b

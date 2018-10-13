@@ -9,134 +9,52 @@ class Result {
     private DoubleProperty s2ToFilmLateral;
     private DoubleProperty s2ToMFHLateralFilm;
     private DoubleProperty s2ToMFHTrue;
-    private DoubleProperty s2ToMFHAPFilm;
     private DoubleProperty s2ToFilmAP;
     private DoubleProperty MFHToFilmTrue;
-    private DoubleProperty S2ToMFHOffset;
+    private DoubleProperty s2ToMFHAPFilm;
+    private DoubleProperty s2ToMFHOffset;
     private DoubleProperty rotationDegree;
 
-    // Calculations
-    private Double magnificationFactor;
-
-    Result(double focalFilmDistance, double s2ToFilmLateral, double s2ToMFHLateralFilm) {
+    Result(double focalFilmDistance, double s2ToFilmLateral, double s2ToMFHLateralFilm, double s2ToFilmAP,
+           double s2ToMFHAPFilm) {
         this.focalFilmDistance = new SimpleDoubleProperty(focalFilmDistance);
         this.s2ToFilmLateral = new SimpleDoubleProperty(s2ToFilmLateral);
         this.s2ToMFHLateralFilm = new SimpleDoubleProperty(s2ToMFHLateralFilm);
+        this.s2ToFilmAP = new SimpleDoubleProperty(s2ToFilmAP);
+        this.s2ToMFHAPFilm = new SimpleDoubleProperty(s2ToMFHAPFilm);
+
+        // Calculate true S2 to MFH
+        Double lateralSourceObject = s2ToFilmLateral - focalFilmDistance;
+        Double lateralMagFactor = (lateralSourceObject + s2ToFilmLateral) / lateralSourceObject;
+        this.s2ToMFHTrue = new SimpleDoubleProperty(s2ToMFHLateralFilm / lateralMagFactor);
+
+        // Calculate true MFH to film
+        this.MFHToFilmTrue = new SimpleDoubleProperty(s2ToFilmAP + s2ToMFHTrue.doubleValue());
+
+        // Calculate rotational degree
+        Double APSourceObject = focalFilmDistance + s2ToMFHTrue.doubleValue();
+        Double APMagFactor = (APSourceObject + s2ToMFHTrue.doubleValue()) / APSourceObject;
+        this.s2ToMFHOffset = new SimpleDoubleProperty(s2ToMFHAPFilm / APMagFactor);
+        this.rotationDegree = new SimpleDoubleProperty(
+                StrictMath.asin(this.s2ToMFHOffset.doubleValue() / this.s2ToMFHTrue.doubleValue())
+        );
     }
 
-    public double getFocalFilmDistance() {
-        return focalFilmDistance.get();
-    }
+    DoubleProperty focalFilmDistanceProperty() { return focalFilmDistance; }
 
-    public DoubleProperty focalFilmDistanceProperty() {
-        return focalFilmDistance;
-    }
+    DoubleProperty s2ToFilmLateralProperty() { return s2ToFilmLateral; }
 
-    public void setFocalFilmDistance(double focalFilmDistance) {
-        this.focalFilmDistance.set(focalFilmDistance);
-    }
+    DoubleProperty s2ToMFHLateralFilmProperty() { return s2ToMFHLateralFilm; }
 
-    public double getS2ToFilmLateral() {
-        return s2ToFilmLateral.get();
-    }
+    DoubleProperty s2ToMFHTrueProperty() { return s2ToMFHTrue; }
 
-    public DoubleProperty s2ToFilmLateralProperty() {
-        return s2ToFilmLateral;
-    }
+    DoubleProperty s2ToMFHAPFilmProperty() { return s2ToMFHAPFilm; }
 
-    public void setS2ToFilmLateral(double s2ToFilmLateral) {
-        this.s2ToFilmLateral.set(s2ToFilmLateral);
-    }
+    DoubleProperty s2ToFilmAPProperty() { return s2ToFilmAP; }
 
-    public double getS2ToMFHLateralFilm() {
-        return s2ToMFHLateralFilm.get();
-    }
+    DoubleProperty MFHToFilmTrueProperty() { return MFHToFilmTrue; }
 
-    public DoubleProperty s2ToMFHLateralFilmProperty() {
-        return s2ToMFHLateralFilm;
-    }
+    DoubleProperty s2ToMFHOffsetProperty() { return s2ToMFHOffset; }
 
-    public void setS2ToMFHLateralFilm(double s2ToMFHLateralFilm) {
-        this.s2ToMFHLateralFilm.set(s2ToMFHLateralFilm);
-    }
-
-    public double getS2ToMFHTrue() {
-        return s2ToMFHTrue.get();
-    }
-
-    public DoubleProperty s2ToMFHTrueProperty() {
-        return s2ToMFHTrue;
-    }
-
-    public void setS2ToMFHTrue(double s2ToMFHTrue) {
-        this.s2ToMFHTrue.set(s2ToMFHTrue);
-    }
-
-    public double getS2ToMFHAPFilm() {
-        return s2ToMFHAPFilm.get();
-    }
-
-    public DoubleProperty s2ToMFHAPFilmProperty() {
-        return s2ToMFHAPFilm;
-    }
-
-    public void setS2ToMFHAPFilm(double s2ToMFHAPFilm) {
-        this.s2ToMFHAPFilm.set(s2ToMFHAPFilm);
-    }
-
-    public double getS2ToFilmAP() {
-        return s2ToFilmAP.get();
-    }
-
-    public DoubleProperty s2ToFilmAPProperty() {
-        return s2ToFilmAP;
-    }
-
-    public void setS2ToFilmAP(double s2ToFilmAP) {
-        this.s2ToFilmAP.set(s2ToFilmAP);
-    }
-
-    public double getMFHToFilmTrue() {
-        return MFHToFilmTrue.get();
-    }
-
-    public DoubleProperty MFHToFilmTrueProperty() {
-        return MFHToFilmTrue;
-    }
-
-    public void setMFHToFilmTrue(double MFHToFilmTrue) {
-        this.MFHToFilmTrue.set(MFHToFilmTrue);
-    }
-
-    public double getS2ToMFHOffset() {
-        return S2ToMFHOffset.get();
-    }
-
-    public DoubleProperty s2ToMFHOffsetProperty() {
-        return S2ToMFHOffset;
-    }
-
-    public void setS2ToMFHOffset(double s2ToMFHOffset) {
-        this.S2ToMFHOffset.set(s2ToMFHOffset);
-    }
-
-    public double getRotationDegree() {
-        return rotationDegree.get();
-    }
-
-    public DoubleProperty rotationDegreeProperty() {
-        return rotationDegree;
-    }
-
-    public void setRotationDegree(double rotationDegree) {
-        this.rotationDegree.set(rotationDegree);
-    }
-
-    public Double getMagnificationFactor() {
-        return magnificationFactor;
-    }
-
-    public void setMagnificationFactor(Double magnificationFactor) {
-        this.magnificationFactor = magnificationFactor;
-    }
+    DoubleProperty rotationDegreeProperty() { return rotationDegree; }
 }

@@ -31,6 +31,18 @@ public class MainController {
     public TableColumn<Result, Double> s2ToFilmLateralCol;
     @FXML
     public TableColumn<Result, Double> s2ToMFHLateralFilmCol;
+    @FXML
+    public TableColumn<Result, Double> s2ToMFHTrueCol;
+    @FXML
+    public TableColumn<Result, Double> s2ToFilmAPCol;
+    @FXML
+    public TableColumn<Result, Double> MFHToFilmTrueCol;
+    @FXML
+    public TableColumn<Result, Double> s2ToMFHAPFilmCol;
+    @FXML
+    public TableColumn<Result, Double> s2ToMFHOffsetCol;
+    @FXML
+    public TableColumn<Result, Double> rotationalDegreeCol;
 
     ObservableList<Result> resultsTableData = FXCollections.observableArrayList();
 
@@ -39,17 +51,23 @@ public class MainController {
         focalFilmDistanceCol.setCellValueFactory(cellData -> cellData.getValue().focalFilmDistanceProperty().asObject());
         s2ToFilmLateralCol.setCellValueFactory(cellData -> cellData.getValue().s2ToFilmLateralProperty().asObject());
         s2ToMFHLateralFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHLateralFilmProperty().asObject());
+        s2ToFilmAPCol.setCellValueFactory(cellData -> cellData.getValue().s2ToFilmAPProperty().asObject());
+        s2ToMFHAPFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHAPFilmProperty().asObject());
+        s2ToMFHTrueCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHTrueProperty().asObject());
+        MFHToFilmTrueCol.setCellValueFactory(cellData -> cellData.getValue().MFHToFilmTrueProperty().asObject());
+        s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHOffsetProperty().asObject());
+        rotationalDegreeCol.setCellValueFactory(cellData -> cellData.getValue().rotationDegreeProperty().asObject());
     }
 
     @FXML
     public void calculateButtonPressed() {
-        // TODO: Populate new row in resultsTable
-        System.out.println(focalFilmDistanceField.getText());
         resultsTableData.add(
                 new Result(
                         new Double(focalFilmDistanceField.getText()),
                         new Double(s2ToFilmLateralField.getText()),
-                        new Double(s2ToMFHLateralFilmField.getText())
+                        new Double(s2ToMFHLateralFilmField.getText()),
+                        new Double(s2ToFilmAPField.getText()),
+                        new Double(s2ToMFHAPFilmField.getText())
                 )
         );
         resultsTable.setItems(resultsTableData);
