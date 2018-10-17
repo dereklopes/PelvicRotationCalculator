@@ -47,7 +47,7 @@
                   <HBox spacing="5.0">
                      <children>
                         <TextField id="focalFilmDistanceField" fx:id="focalFilmDistanceField" prefWidth="100.0" />
-                        <ChoiceBox prefWidth="50.0" />
+                        <ChoiceBox fx:id="focalFilmDistanceUnitsBox" prefWidth="50.0" />
                      </children>
                   </HBox>
                   <Separator layoutX="10.0" layoutY="148.0" prefWidth="200.0">
@@ -59,14 +59,14 @@
                   <HBox spacing="5.0">
                      <children>
                         <TextField id="s2ToFilmLateralField" fx:id="s2ToFilmLateralField" prefWidth="100.0" />
-                        <ChoiceBox prefWidth="50.0" />
+                        <ChoiceBox fx:id="s2ToFilmLateralUnitsBox" prefWidth="50.0" />
                      </children>
                   </HBox>
                      <Label text="S2 to MFH (lateral, from film):" />
                   <HBox spacing="5.0">
                      <children>
                         <TextField id="s2ToMFHLateralFilmField" fx:id="s2ToMFHLateralFilmField" prefWidth="100.0" />
-                        <ChoiceBox prefWidth="50.0" />
+                        <ChoiceBox fx:id="s2ToMFHLateralFilmUnitsBox" prefWidth="50.0" />
                      </children>
                   </HBox>
                   <Separator layoutX="10.0" layoutY="194.0" prefWidth="200.0">
@@ -78,14 +78,14 @@
                   <HBox spacing="5.0">
                      <children>
                         <TextField id="s2ToFilmAPField" fx:id="s2ToFilmAPField" prefWidth="100.0" />
-                        <ChoiceBox prefWidth="50.0" />
+                        <ChoiceBox fx:id="s2ToFilmAPUnitsBox" prefWidth="50.0" />
                      </children>
                   </HBox>
                   <Label layoutX="10.0" layoutY="163.0" text="S2 to MFH (A-P, from film):" />
                   <HBox spacing="5.0">
                      <children>
                         <TextField id="s2ToMFHAPFilmField" fx:id="s2ToMFHAPFilmField" layoutX="10.0" layoutY="182.0" prefWidth="100.0" />
-                        <ChoiceBox prefWidth="50.0" />
+                        <ChoiceBox fx:id="s2ToMFHAPFilmUnitsBox" prefWidth="50.0" />
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0">
@@ -95,7 +95,7 @@
                   <HBox alignment="CENTER_LEFT" spacing="5.0">
                      <children>
                         <Label text="Result Units:" />
-                        <ChoiceBox prefWidth="75.0" />
+                        <ChoiceBox fx:id="resultUnitsBox" prefWidth="75.0" />
                      </children>
                   </HBox>
                   <VBox alignment="CENTER">

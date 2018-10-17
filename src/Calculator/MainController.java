@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
-
+import javafx.scene.control.ChoiceBox;
 
 public class MainController {
     @FXML
@@ -44,10 +44,34 @@ public class MainController {
     @FXML
     public TableColumn<Result, Double> rotationalDegreeCol;
 
+    @FXML
+    public ChoiceBox focalFilmDistanceUnitsBox;
+    @FXML
+    public ChoiceBox s2ToFilmLateralUnitsBox;
+    @FXML
+    public ChoiceBox s2ToMFHLateralFilmUnitsBox;
+    @FXML
+    public ChoiceBox s2ToFilmAPUnitsBox;
+    @FXML
+    public ChoiceBox resultUnitsBox;
+
     ObservableList<Result> resultsTableData = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
+        // Populate choice boxes with unit types
+        ChoiceBox[] unitChoiceBoxes = {
+                focalFilmDistanceUnitsBox,
+                s2ToFilmLateralUnitsBox,
+                s2ToMFHLateralFilmUnitsBox,
+                s2ToFilmAPUnitsBox,
+                resultUnitsBox,
+        };
+        for (ChoiceBox unitChoiceBox: unitChoiceBoxes) {
+            unitChoiceBox.setItems(FXCollections.observableArrayList("cm", "in"));
+        }
+
+        // Populate table data
         focalFilmDistanceCol.setCellValueFactory(cellData -> cellData.getValue().focalFilmDistanceProperty().asObject());
         s2ToFilmLateralCol.setCellValueFactory(cellData -> cellData.getValue().s2ToFilmLateralProperty().asObject());
         s2ToMFHLateralFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHLateralFilmProperty().asObject());
