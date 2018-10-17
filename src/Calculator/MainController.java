@@ -53,6 +53,8 @@ public class MainController {
     @FXML
     public ChoiceBox s2ToFilmAPUnitsBox;
     @FXML
+    public ChoiceBox s2ToMFHAPFilmUnitsBox;
+    @FXML
     public ChoiceBox resultUnitsBox;
 
     ObservableList<Result> resultsTableData = FXCollections.observableArrayList();
@@ -65,6 +67,7 @@ public class MainController {
                 s2ToFilmLateralUnitsBox,
                 s2ToMFHLateralFilmUnitsBox,
                 s2ToFilmAPUnitsBox,
+                s2ToMFHAPFilmUnitsBox,
                 resultUnitsBox,
         };
         for (ChoiceBox unitChoiceBox: unitChoiceBoxes) {
@@ -91,7 +94,13 @@ public class MainController {
                         new Double(s2ToFilmLateralField.getText()),
                         new Double(s2ToMFHLateralFilmField.getText()),
                         new Double(s2ToFilmAPField.getText()),
-                        new Double(s2ToMFHAPFilmField.getText())
+                        new Double(s2ToMFHAPFilmField.getText()),
+                        focalFilmDistanceUnitsBox.getValue().toString(),
+                        s2ToFilmLateralUnitsBox.getValue().toString(),
+                        s2ToMFHLateralFilmUnitsBox.getValue().toString(),
+                        s2ToFilmAPUnitsBox.getValue().toString(),
+                        s2ToMFHAPFilmUnitsBox.getValue().toString(),
+                        resultUnitsBox.getValue().toString()
                 )
         );
         resultsTable.setItems(resultsTableData);
