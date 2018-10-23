@@ -32,6 +32,8 @@ Calculations:
 
 14. TBD
 
+Example result: 5.8 degrees
+
 *UK = unknown, needs to be inputted into program
 
 **Explanation of step 10 and 11:

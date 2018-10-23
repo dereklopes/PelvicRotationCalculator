@@ -2,14 +2,22 @@ package Calculator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.ChoiceBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 public class MainController {
+    @FXML
+    public TextField nameField;
     @FXML
     public TextField focalFilmDistanceField;
     @FXML
@@ -25,6 +33,8 @@ public class MainController {
 
     @FXML
     public TableView resultsTable;
+    @FXML
+    public TableColumn<Result, String> nameCol;
     @FXML
     public TableColumn<Result, Double> focalFilmDistanceCol;
     @FXML
@@ -75,6 +85,7 @@ public class MainController {
         }
 
         // Populate table data
+        nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         focalFilmDistanceCol.setCellValueFactory(cellData -> cellData.getValue().focalFilmDistanceProperty().asObject());
         s2ToFilmLateralCol.setCellValueFactory(cellData -> cellData.getValue().s2ToFilmLateralProperty().asObject());
         s2ToMFHLateralFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHLateralFilmProperty().asObject());
@@ -88,21 +99,49 @@ public class MainController {
 
     @FXML
     public void calculateButtonPressed() {
-        resultsTableData.add(
-                new Result(
-                        new Double(focalFilmDistanceField.getText()),
-                        new Double(s2ToFilmLateralField.getText()),
-                        new Double(s2ToMFHLateralFilmField.getText()),
-                        new Double(s2ToFilmAPField.getText()),
-                        new Double(s2ToMFHAPFilmField.getText()),
-                        focalFilmDistanceUnitsBox.getValue().toString(),
-                        s2ToFilmLateralUnitsBox.getValue().toString(),
-                        s2ToMFHLateralFilmUnitsBox.getValue().toString(),
-                        s2ToFilmAPUnitsBox.getValue().toString(),
-                        s2ToMFHAPFilmUnitsBox.getValue().toString(),
-                        resultUnitsBox.getValue().toString()
-                )
-        );
-        resultsTable.setItems(resultsTableData);
+        try {
+            resultsTableData.add(
+                    new Result(
+                            nameField.getText(),
+                            new Double(focalFilmDistanceField.getText()),
+                            new Double(s2ToFilmLateralField.getText()),
+                            new Double(s2ToMFHLateralFilmField.getText()),
+                            new Double(s2ToFilmAPField.getText()),
+                            new Double(s2ToMFHAPFilmField.getText()),
+                            focalFilmDistanceUnitsBox.getValue().toString(),
+                            s2ToFilmLateralUnitsBox.getValue().toString(),
+                            s2ToMFHLateralFilmUnitsBox.getValue().toString(),
+                            s2ToFilmAPUnitsBox.getValue().toString(),
+                            s2ToMFHAPFilmUnitsBox.getValue().toString(),
+                            resultUnitsBox.getValue().toString()
+                    )
+            );
+            resultsTable.setItems(resultsTableData);
+        } catch (NumberFormatException e) {
+            showErrorPopup("Provided values are invalid. Please try again.");
+        } catch (Exception e) {
+            showErrorPopup("An error occurred: " + e.getMessage());
+        }
+    }
+
+    private void showErrorPopup(String message) {
+        final Stage errorWindow = new Stage();
+        errorWindow.initModality(Modality.WINDOW_MODAL);
+        Button okButton = new Button("Close");
+        okButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent arg0) {
+                errorWindow.close();
+            }
+        });
+        Scene myDialogScene = new Scene(VBoxBuilder.create()
+                .children(new Text(message), okButton)
+                .alignment(Pos.CENTER)
+                .padding(new Insets(10))
+                .spacing(5)
+                .build());
+
+        errorWindow.setScene(myDialogScene);
+        errorWindow.show();
     }
 }

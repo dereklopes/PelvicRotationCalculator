@@ -8,11 +8,14 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    static Stage primaryStage;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         primaryStage.setTitle("Pelvic Rotation Calculator");
         primaryStage.setScene(new Scene(root));
+        this.primaryStage = primaryStage;
         primaryStage.show();
     }
 
