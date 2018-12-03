@@ -18,16 +18,20 @@ class Result {
     private DoubleProperty s2ToFilmAP;
     private DoubleProperty MFHToFilmTrue;
     private DoubleProperty s2ToMFHAPFilm;
-    private DoubleProperty s2ToMFHOffset;
-    private DoubleProperty rotationDegree;
+    private DoubleProperty s2s2ToMFHOffset;
+    private DoubleProperty s2RotationDegree;
+    private DoubleProperty MFHs2ToMFHOffset;
+    private DoubleProperty MFHRotationDegree;
 
     Double lateralSourceObject;
     Double lateralMagFactor;
     Double APSourceObject;
-    Double APMagFactor;
+    Double s2APMagFactor;
+    Double MFHAPMagFactor;
 
     private static final double inToCm = 2.54;
-    private static final double cmToIn = 0.393701;
+    private static final double mmToCm = 0.1;
+    private static final double radToDeg = 180 / StrictMath.PI;
 
     Result(String name, double focalFilmDistance, double s2ToFilmLateral, double s2ToMFHLateralFilm, double s2ToFilmAP,
            double s2ToMFHAPFilm, String focalFilmDistanceUnits, String s2ToFilmLateralUnits,
@@ -37,43 +41,56 @@ class Result {
         this.focalFilmDistance = new SimpleDoubleProperty(focalFilmDistance);
         if (focalFilmDistanceUnits.equals("in")) {
             this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * inToCm, 2));
+        } else if (focalFilmDistanceUnits.equals("mm")) {
+            this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * mmToCm, 2));
         }
         this.s2ToFilmLateral = new SimpleDoubleProperty(s2ToFilmLateral);
         if (s2ToFilmLateralUnits.equals("in")) {
             this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * inToCm, 2));
+        } else if (s2ToFilmLateralUnits.equals("mm")) {
+            this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * mmToCm, 2));
         }
         this.s2ToMFHLateralFilm = new SimpleDoubleProperty(s2ToMFHLateralFilm);
         if (s2ToMFHLateralFilmUnits.equals("in")) {
             this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * inToCm, 2));
+        } else if (s2ToMFHLateralFilmUnits.equals("mm")) {
+            this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * mmToCm, 2));
         }
         this.s2ToFilmAP = new SimpleDoubleProperty(s2ToFilmAP);
         if (s2ToFilmAPUnits.equals("in")) {
             this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * inToCm, 2));
+        } else if (s2ToFilmAPUnits.equals("mm")) {
+            this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * mmToCm, 2));
         }
         this.s2ToMFHAPFilm = new SimpleDoubleProperty(s2ToMFHAPFilm);
         if (s2ToMFHAPFilmUnits.equals("in")) {
             this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * inToCm, 2));
+        } else if (s2ToMFHAPFilmUnits.equals("mm")) {
+            this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * mmToCm, 2));
         }
 
         // Calculate true S2 to MFH
         this.lateralSourceObject = focalFilmDistance - s2ToFilmLateral;
         this.lateralMagFactor = round((lateralSourceObject + s2ToFilmLateral) / lateralSourceObject, 2);
-        this.s2ToMFHTrue = new SimpleDoubleProperty(round(s2ToMFHLateralFilm / lateralMagFactor, 1));
+        this.s2ToMFHTrue = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() / lateralMagFactor, 2));
 
         // Calculate true MFH to film
-        System.out.println("this.s2ToFilmAP.get() = " + this.s2ToFilmAP.get());
-        System.out.println("this.s2ToMFHTrue.get() = " + this.s2ToMFHTrue.get());
-        this.MFHToFilmTrue = new SimpleDoubleProperty(this.s2ToFilmAP.get() + this.s2ToMFHTrue.get());
+        this.MFHToFilmTrue = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() + this.s2ToMFHTrue.get(), 2));
 
-        // Calculate rotational degree
-        System.out.println("focalFilmDistance = " + this.focalFilmDistance.get());
-        System.out.println("this.MFHToFilmTrue = " + this.MFHToFilmTrue.get());
+        // Calculate rotational degree with S2 as axis of rotation
         this.APSourceObject = this.focalFilmDistance.get() - this.MFHToFilmTrue.get();
-        this.APMagFactor = (APSourceObject + s2ToMFHTrue.doubleValue()) / APSourceObject;
-        this.s2ToMFHOffset = new SimpleDoubleProperty(s2ToMFHAPFilm / APMagFactor);
-        this.rotationDegree = new SimpleDoubleProperty(
-                StrictMath.asin(this.s2ToMFHOffset.doubleValue() / this.s2ToMFHTrue.doubleValue())
-        );
+        this.s2APMagFactor = round((APSourceObject + this.MFHToFilmTrue.get()) / APSourceObject, 2);
+        this.s2s2ToMFHOffset = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() / s2APMagFactor, 2));
+        double opOverHyp = round(this.s2s2ToMFHOffset.doubleValue() / this.s2ToMFHTrue.doubleValue(), 3);
+        double rotationDegreeRads = StrictMath.asin(opOverHyp);
+        this.s2RotationDegree = new SimpleDoubleProperty(round(rotationDegreeRads * radToDeg, 1));
+
+        // Calculate rotational degree with MFH as axis of rotation
+        this.MFHAPMagFactor = round(focalFilmDistance / (focalFilmDistance - s2ToFilmAP), 2);
+        this.MFHs2ToMFHOffset = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() / this.MFHAPMagFactor, 2));
+        opOverHyp = round(this.MFHs2ToMFHOffset.doubleValue() / this.s2ToMFHTrue.doubleValue(), 3);
+        rotationDegreeRads = StrictMath.asin(opOverHyp);
+        this.MFHRotationDegree = new SimpleDoubleProperty(round(rotationDegreeRads * radToDeg, 1));
     }
 
     private static double round(double value, int places) {
@@ -84,23 +101,51 @@ class Result {
         return bd.doubleValue();
     }
 
-    StringProperty nameProperty() { return name; }
+    StringProperty nameProperty() {
+        return name;
+    }
 
-    DoubleProperty focalFilmDistanceProperty() { return focalFilmDistance; }
+    DoubleProperty focalFilmDistanceProperty() {
+        return focalFilmDistance;
+    }
 
-    DoubleProperty s2ToFilmLateralProperty() { return s2ToFilmLateral; }
+    DoubleProperty s2ToFilmLateralProperty() {
+        return s2ToFilmLateral;
+    }
 
-    DoubleProperty s2ToMFHLateralFilmProperty() { return s2ToMFHLateralFilm; }
+    DoubleProperty s2ToMFHLateralFilmProperty() {
+        return s2ToMFHLateralFilm;
+    }
 
-    DoubleProperty s2ToMFHTrueProperty() { return s2ToMFHTrue; }
+    DoubleProperty s2ToMFHTrueProperty() {
+        return s2ToMFHTrue;
+    }
 
-    DoubleProperty s2ToMFHAPFilmProperty() { return s2ToMFHAPFilm; }
+    DoubleProperty s2ToMFHAPFilmProperty() {
+        return s2ToMFHAPFilm;
+    }
 
-    DoubleProperty s2ToFilmAPProperty() { return s2ToFilmAP; }
+    DoubleProperty s2ToFilmAPProperty() {
+        return s2ToFilmAP;
+    }
 
-    DoubleProperty MFHToFilmTrueProperty() { return MFHToFilmTrue; }
+    DoubleProperty MFHToFilmTrueProperty() {
+        return MFHToFilmTrue;
+    }
 
-    DoubleProperty s2ToMFHOffsetProperty() { return s2ToMFHOffset; }
+    DoubleProperty s2s2ToMFHOffsetProperty() {
+        return s2s2ToMFHOffset;
+    }
 
-    DoubleProperty rotationDegreeProperty() { return rotationDegree; }
+    DoubleProperty s2RotationDegreeProperty() {
+        return s2RotationDegree;
+    }
+
+    DoubleProperty MFHs2ToMFHOffsetProperty() {
+        return MFHs2ToMFHOffset;
+    }
+
+    DoubleProperty MFHRotationDegreeProperty() {
+        return MFHRotationDegree;
+    }
 }

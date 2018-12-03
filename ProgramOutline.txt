@@ -30,9 +30,9 @@ Calculations:
 13. Find rotational degree by sin (theta) = opposite/hypotenuse to get rotation with S2 as axis (ex. 5.5)
     where opposite is true S2 to MFH offset distance (A-P) and hypotenuse is true S2 to MFH
 
-14. TBD
+14. Find rotational degree but this time use MFH as axis of rotation
 
-Example result: 5.8 degrees
+Example result: 5.5 degrees with S2 as axis of rotation, 5.8 degrees with MFH as axis of rotation
 
 *UK = unknown, needs to be inputted into program
 

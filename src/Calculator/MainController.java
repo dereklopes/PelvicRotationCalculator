@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 public class MainController {
@@ -93,8 +92,8 @@ public class MainController {
         s2ToMFHAPFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHAPFilmProperty().asObject());
         s2ToMFHTrueCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHTrueProperty().asObject());
         MFHToFilmTrueCol.setCellValueFactory(cellData -> cellData.getValue().MFHToFilmTrueProperty().asObject());
-        s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHOffsetProperty().asObject());
-        rotationalDegreeCol.setCellValueFactory(cellData -> cellData.getValue().rotationDegreeProperty().asObject());
+        s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2s2ToMFHOffsetProperty().asObject());
+        rotationalDegreeCol.setCellValueFactory(cellData -> cellData.getValue().s2RotationDegreeProperty().asObject());
     }
 
     @FXML

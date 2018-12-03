@@ -18,23 +18,21 @@ class ResultTest {
         String s2ToMFHLateralFilmUnits = "mm";
         String s2ToFilmAPUnits = "in";
         String s2ToMFHAPFilmUnits = "mm";
-        String resultsUnits = "mm";
+        String resultsUnits = "cm";
         Result result = new Result(name, focalFilmDistance, s2ToFilmLateral, s2ToMFHLateralFilm, s2ToFilmAP,
                 s2ToMFHAPFilm, focalFilmDistanceUnits, s2ToFilmLateralUnits, s2ToMFHLateralFilmUnits, s2ToFilmAPUnits,
                 s2ToMFHAPFilmUnits, resultsUnits);
 
-        // Confirmed working
         assertEquals(67, result.lateralSourceObject, 0.01);
         assertEquals(1.07, result.lateralMagFactor, 0.01);
-        assertEquals(93.5, result.s2ToMFHTrue.get(), 0.01);
-
-        // Untested
-        assertEquals(195.1, result.MFHToFilmTrueProperty().get(), 0.01);
-
-        // Confirmed wrong
-        assertEquals(68 * 2.54, result.APSourceObject, 0.01);
-        assertEquals(1.12, result.APMagFactor, 0.01);
-        assertEquals(8.9, result.s2ToMFHOffsetProperty().get(), 0.01);
-        assertEquals(5.8, result.rotationDegreeProperty().get(), 0.01);
+        assertEquals(9.35, result.s2ToMFHTrue.get(), 0.01);
+        assertEquals(19.51, result.MFHToFilmTrueProperty().get(), 0.01);
+        assertEquals(163.37, result.APSourceObject, 0.01);
+        assertEquals(1.12, result.s2APMagFactor, 0.01);
+        assertEquals(.89, result.s2s2ToMFHOffsetProperty().get(), 0.01);
+        assertEquals(5.5, result.s2RotationDegreeProperty().get(), 0.01);
+        assertEquals(1.06, result.MFHAPMagFactor, 0.01);
+        assertEquals(.94, result.MFHs2ToMFHOffsetProperty().get(), 0.01);
+        assertEquals(5.8, result.MFHRotationDegreeProperty().get(), 0.01);
     }
 }
