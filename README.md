@@ -12,7 +12,7 @@ It is written in Java with JavaFX so that it can easily be run on any device wit
 
 The Java Runtime Environment is required to run this application. Older versions may work, but it is recommended that you keep your Java version up to date.
 
-To install Java or update to the latest version, download it [here](java.com/download).
+To install Java or update to the latest version, download it [here](https://java.com/download).
 
 ## Installation
 
