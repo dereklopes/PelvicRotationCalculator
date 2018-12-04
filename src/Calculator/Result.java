@@ -14,7 +14,7 @@ class Result {
     private DoubleProperty focalFilmDistance;
     private DoubleProperty s2ToFilmLateral;
     private DoubleProperty s2ToMFHLateralFilm;
-    DoubleProperty s2ToMFHTrue;
+    private DoubleProperty s2ToMFHTrue;
     private DoubleProperty s2ToFilmAP;
     private DoubleProperty MFHToFilmTrue;
     private DoubleProperty s2ToMFHAPFilm;
@@ -22,6 +22,12 @@ class Result {
     private DoubleProperty s2RotationDegree;
     private DoubleProperty MFHs2ToMFHOffset;
     private DoubleProperty MFHRotationDegree;
+
+    private String focalFilmDistanceUnits;
+    private String s2ToFilmLateralUnits;
+    private String s2ToMFHLateralFilmUnits;
+    private String s2ToFilmAPUnits;
+    private String s2ToMFHAPFilmUnits;
 
     Double lateralSourceObject;
     Double lateralMagFactor;
@@ -31,47 +37,35 @@ class Result {
 
     private static final double inToCm = 2.54;
     private static final double mmToCm = 0.1;
+    private static final double cmToIn = 0.393701;
+    private static final double mmToIn = 0.0393701;
+    private static final double cmToMm = 10;
+    private static final double inToMm = 25.4;
     private static final double radToDeg = 180 / StrictMath.PI;
 
     Result(String name, double focalFilmDistance, double s2ToFilmLateral, double s2ToMFHLateralFilm, double s2ToFilmAP,
            double s2ToMFHAPFilm, String focalFilmDistanceUnits, String s2ToFilmLateralUnits,
            String s2ToMFHLateralFilmUnits, String s2ToFilmAPUnits, String s2ToMFHAPFilmUnits, String resultsUnits) {
         this.name = new SimpleStringProperty(name);
-        // Get input and normalize units to cm
+
+        // Get input
         this.focalFilmDistance = new SimpleDoubleProperty(focalFilmDistance);
-        if (focalFilmDistanceUnits.equals("in")) {
-            this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * inToCm, 2));
-        } else if (focalFilmDistanceUnits.equals("mm")) {
-            this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * mmToCm, 2));
-        }
         this.s2ToFilmLateral = new SimpleDoubleProperty(s2ToFilmLateral);
-        if (s2ToFilmLateralUnits.equals("in")) {
-            this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * inToCm, 2));
-        } else if (s2ToFilmLateralUnits.equals("mm")) {
-            this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * mmToCm, 2));
-        }
         this.s2ToMFHLateralFilm = new SimpleDoubleProperty(s2ToMFHLateralFilm);
-        if (s2ToMFHLateralFilmUnits.equals("in")) {
-            this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * inToCm, 2));
-        } else if (s2ToMFHLateralFilmUnits.equals("mm")) {
-            this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * mmToCm, 2));
-        }
         this.s2ToFilmAP = new SimpleDoubleProperty(s2ToFilmAP);
-        if (s2ToFilmAPUnits.equals("in")) {
-            this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * inToCm, 2));
-        } else if (s2ToFilmAPUnits.equals("mm")) {
-            this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * mmToCm, 2));
-        }
         this.s2ToMFHAPFilm = new SimpleDoubleProperty(s2ToMFHAPFilm);
-        if (s2ToMFHAPFilmUnits.equals("in")) {
-            this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * inToCm, 2));
-        } else if (s2ToMFHAPFilmUnits.equals("mm")) {
-            this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * mmToCm, 2));
-        }
+
+        // Initialize units and normalize to results units
+        this.focalFilmDistanceUnits = focalFilmDistanceUnits;
+        this.s2ToFilmLateralUnits = s2ToFilmLateralUnits;
+        this.s2ToMFHLateralFilmUnits = s2ToMFHLateralFilmUnits;
+        this.s2ToFilmAPUnits = s2ToFilmAPUnits;
+        this.s2ToMFHAPFilmUnits = s2ToMFHAPFilmUnits;
+        this.normalize(resultsUnits);
 
         // Calculate true S2 to MFH
-        this.lateralSourceObject = focalFilmDistance - s2ToFilmLateral;
-        this.lateralMagFactor = round((lateralSourceObject + s2ToFilmLateral) / lateralSourceObject, 2);
+        this.lateralSourceObject = this.focalFilmDistance.get() - this.s2ToFilmLateral.get();
+        this.lateralMagFactor = round((this.lateralSourceObject + this.s2ToFilmLateral.get()) / lateralSourceObject, 2);
         this.s2ToMFHTrue = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() / lateralMagFactor, 2));
 
         // Calculate true MFH to film
@@ -99,6 +93,93 @@ class Result {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    private void normalize(String units) {
+        switch (units) {
+            case "in":
+                if (focalFilmDistanceUnits.equals("cm")) {
+                    this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * cmToIn, 2));
+                } else if (focalFilmDistanceUnits.equals("mm")) {
+                    this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * mmToIn, 2));
+                }
+                if (s2ToFilmLateralUnits.equals("cm")) {
+                    this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * cmToIn, 2));
+                } else if (s2ToFilmLateralUnits.equals("mm")) {
+                    this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * mmToIn, 2));
+                }
+                if (s2ToMFHLateralFilmUnits.equals("cm")) {
+                    this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * cmToIn, 2));
+                } else if (s2ToMFHLateralFilmUnits.equals("mm")) {
+                    this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * mmToIn, 2));
+                }
+                if (s2ToFilmAPUnits.equals("cm")) {
+                    this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * cmToIn, 2));
+                } else if (s2ToFilmAPUnits.equals("mm")) {
+                    this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * mmToIn, 2));
+                }
+                if (s2ToMFHAPFilmUnits.equals("cm")) {
+                    this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * cmToIn, 2));
+                } else if (s2ToMFHAPFilmUnits.equals("mm")) {
+                    this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * mmToIn, 2));
+                }
+                break;
+            case "cm":
+                if (focalFilmDistanceUnits.equals("in")) {
+                    this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * inToCm, 2));
+                } else if (focalFilmDistanceUnits.equals("mm")) {
+                    this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * mmToCm, 2));
+                }
+                if (s2ToFilmLateralUnits.equals("in")) {
+                    this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * inToCm, 2));
+                } else if (s2ToFilmLateralUnits.equals("mm")) {
+                    this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * mmToCm, 2));
+                }
+                if (s2ToMFHLateralFilmUnits.equals("in")) {
+                    this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * inToCm, 2));
+                } else if (s2ToMFHLateralFilmUnits.equals("mm")) {
+                    this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * mmToCm, 2));
+                }
+                if (s2ToFilmAPUnits.equals("in")) {
+                    this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * inToCm, 2));
+                } else if (s2ToFilmAPUnits.equals("mm")) {
+                    this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * mmToCm, 2));
+                }
+                if (s2ToMFHAPFilmUnits.equals("in")) {
+                    this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * inToCm, 2));
+                } else if (s2ToMFHAPFilmUnits.equals("mm")) {
+                    this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * mmToCm, 2));
+                }
+                break;
+            case "mm":
+                if (focalFilmDistanceUnits.equals("cm")) {
+                    this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * cmToMm, 2));
+                } else if (focalFilmDistanceUnits.equals("in")) {
+                    this.focalFilmDistance = new SimpleDoubleProperty(round(this.focalFilmDistance.get() * inToMm, 2));
+                }
+                if (s2ToFilmLateralUnits.equals("cm")) {
+                    this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * cmToMm, 2));
+                } else if (s2ToFilmLateralUnits.equals("in")) {
+                    this.s2ToFilmLateral = new SimpleDoubleProperty(round(this.s2ToFilmLateral.get() * inToMm, 2));
+                }
+                if (s2ToMFHLateralFilmUnits.equals("cm")) {
+                    this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * cmToMm, 2));
+                } else if (s2ToMFHLateralFilmUnits.equals("in")) {
+                    this.s2ToMFHLateralFilm = new SimpleDoubleProperty(round(this.s2ToMFHLateralFilm.get() * inToMm, 2));
+                }
+                if (s2ToFilmAPUnits.equals("cm")) {
+                    this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * cmToMm, 2));
+                } else if (s2ToFilmAPUnits.equals("in")) {
+                    this.s2ToFilmAP = new SimpleDoubleProperty(round(this.s2ToFilmAP.get() * inToMm, 2));
+                }
+                if (s2ToMFHAPFilmUnits.equals("cm")) {
+                    this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * cmToMm, 2));
+                } else if (s2ToMFHAPFilmUnits.equals("in")) {
+                    this.s2ToMFHAPFilm = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() * inToMm, 2));
+                }
+                break;
+        }
+
     }
 
     StringProperty nameProperty() {

@@ -25,7 +25,7 @@ class ResultTest {
 
         assertEquals(67, result.lateralSourceObject, 0.01);
         assertEquals(1.07, result.lateralMagFactor, 0.01);
-        assertEquals(9.35, result.s2ToMFHTrue.get(), 0.01);
+        assertEquals(9.35, result.s2ToMFHTrueProperty().get(), 0.01);
         assertEquals(19.51, result.MFHToFilmTrueProperty().get(), 0.01);
         assertEquals(163.37, result.APSourceObject, 0.01);
         assertEquals(1.12, result.s2APMagFactor, 0.01);
