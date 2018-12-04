@@ -16,7 +16,7 @@ To install Java or update to the latest version, download it [here](https://java
 
 ## Installation
 
-Go [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/out/build/PelvicRotationCalculator.jar) and download the jar file.
+Click [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/out/build/PelvicRotationCalculator.jar) to download the jar file.
 
 To run, simply open the downloaded program file.
 
