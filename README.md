@@ -20,6 +20,14 @@ Go [here](https://github.com/dereklopes/PelvicRotationCalculator/tree/master/out
 
 To run, simply open the downloaded program file.
 
+## Run Issues
+
+### Mac OS
+
+Error: `"PelvicRotationCalculator.jar" can't be opened because it is from an unidentified developer."`
+
+Fix: Go to `System Preferences->Security & Privacy->General` and click on `Open Anyway`
+
 ## How to Use
 
 Once you have your measurements, input them in the input section and select the units for the measurements. Then press the "Calculate" button.
