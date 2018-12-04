@@ -2,6 +2,8 @@
 ## About
 This is a program to calculate true measurements and rotation amounts given measurements from x-ray film and the x-ray environment.
 
+It has been developed for the non-profit [Gonstead Clinical Studies Society](gonstead.com).
+
 The methodology is based on [this article](https://github.com/dereklopes/PelvicRotationCalculator/blob/master/Pelvic%20Rotation%20article.pdf).
 
 It is written in Java with JavaFX so that it can easily be run on any device with Java installed.
@@ -14,7 +16,7 @@ To install Java or update to the latest version, download it [here](java.com/dow
 
 ## Installation
 
-Go [here](https://github.com/dereklopes/PelvicRotationCalculator/tree/master/build) and download the corresponding application for your architecture.
+Go [here](https://github.com/dereklopes/PelvicRotationCalculator/tree/master/out/build) and download the jar file.
 
 To run, simply open the downloaded program file.
 
