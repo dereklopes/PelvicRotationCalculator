@@ -116,7 +116,7 @@
                      <Button id="calculateButton" fx:id="calculateButton" defaultButton="true" mnemonicParsing="false" onAction="#calculateButtonPressed" text="Calculate" />
                </children>
             </HBox>
-            <HBox spacing="10.0">
+            <HBox spacing="5.0">
                <children>
                   <VBox alignment="CENTER">
                      <children>
@@ -137,17 +137,36 @@
                         </TableView>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER">
+                  <VBox alignment="CENTER" maxWidth="227.0">
                      <children>
                         <Label text="Results" />
                         <TableView fx:id="resultsTable">
                           <columns>
                             <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="110.0" text="True S2 to MFH" />
                             <TableColumn fx:id="MFHToFilmTrueCol" minWidth="-Infinity" prefWidth="115.0" text="True MFH to Film" />
-                            <TableColumn fx:id="s2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
-                            <TableColumn fx:id="rotationalDegreeColS2" minWidth="-Infinity" prefWidth="134.0" text="Rotation (S2 as Axis)" />
-                              <TableColumn fx:id="rotationalDegreeColMFH" minWidth="-Infinity" prefWidth="149.0" text="Rotation (MFH as Axis)" />
                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" maxWidth="227.0">
+                     <children>
+                        <Label text="Results (S2 as Axis of Rotation)" />
+                        <TableView fx:id="S2resultsTable">
+                           <columns>
+                              <TableColumn fx:id="S2s2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
+                              <TableColumn fx:id="rotationalDegreeColS2" minWidth="-Infinity" prefWidth="75.0" text="Rotation" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" maxWidth="227.0">
+                     <children>
+                        <Label text="Results (MFH as Axis of Rotation)" />
+                        <TableView fx:id="MFHresultsTable">
+                           <columns>
+                              <TableColumn fx:id="MFHs2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
+                              <TableColumn fx:id="rotationalDegreeColMFH" minWidth="-Infinity" prefWidth="75.0" text="Rotation" />
+                           </columns>
                         </TableView>
                      </children>
                   </VBox>

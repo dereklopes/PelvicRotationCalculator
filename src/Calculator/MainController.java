@@ -35,6 +35,10 @@ public class MainController {
     @FXML
     public TableView resultsTable;
     @FXML
+    public TableView S2resultsTable;
+    @FXML
+    public TableView MFHresultsTable;
+    @FXML
     public TableView inputTable;
     @FXML
     public TableColumn<Result, String> nameCol;
@@ -53,7 +57,9 @@ public class MainController {
     @FXML
     public TableColumn<Result, Double> s2ToMFHAPFilmCol;
     @FXML
-    public TableColumn<Result, Double> s2ToMFHOffsetCol;
+    public TableColumn<Result, Double> S2s2ToMFHOffsetCol;
+    @FXML
+    public TableColumn<Result, Double> MFHs2ToMFHOffsetCol;
     @FXML
     public TableColumn<Result, Double> rotationalDegreeColS2;
     @FXML
@@ -81,6 +87,8 @@ public class MainController {
 
     private ObservableList<Result> inputTableData = FXCollections.observableArrayList();
     private ObservableList<Result> resultsTableData = FXCollections.observableArrayList();
+    private ObservableList<Result> S2resultsTableData = FXCollections.observableArrayList();
+    private ObservableList<Result> MFHresultsTableData = FXCollections.observableArrayList();
     private HostServices hostServices;
 
     @FXML
@@ -111,7 +119,8 @@ public class MainController {
         s2ToMFHAPFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHAPFilmProperty().asObject());
         s2ToMFHTrueCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHTrueProperty().asObject());
         MFHToFilmTrueCol.setCellValueFactory(cellData -> cellData.getValue().MFHToFilmTrueProperty().asObject());
-        s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2s2ToMFHOffsetProperty().asObject());
+        S2s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2s2ToMFHOffsetProperty().asObject());
+        MFHs2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().MFHs2ToMFHOffsetProperty().asObject());
         rotationalDegreeColS2.setCellValueFactory(cellData -> cellData.getValue().s2RotationDegreeProperty().asObject());
         rotationalDegreeColMFH.setCellValueFactory(cellData -> cellData.getValue().MFHRotationDegreeProperty().asObject());
     }
@@ -133,10 +142,14 @@ public class MainController {
                     s2ToMFHAPFilmUnitsBox.getValue().toString(),
                     resultUnitsBox.getValue().toString()
             );
-            resultsTableData.add(result);
-            resultsTable.setItems(resultsTableData);
             inputTableData.add(result);
             inputTable.setItems(inputTableData);
+            resultsTableData.add(result);
+            resultsTable.setItems(resultsTableData);
+            S2resultsTableData.add(result);
+            S2resultsTable.setItems(S2resultsTableData);
+            MFHresultsTableData.add(result);
+            MFHresultsTable.setItems(MFHresultsTableData);
         } catch (NumberFormatException e) {
             showErrorPopup("Provided values are invalid. Please try again.");
         } catch (Exception e) {
