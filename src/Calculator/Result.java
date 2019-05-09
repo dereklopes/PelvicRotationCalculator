@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 class Result {
-    // Unknowns
     private StringProperty name;
+    private StringProperty resultUnits;
     private DoubleProperty focalFilmDistance;
     private DoubleProperty s2ToFilmLateral;
     private DoubleProperty s2ToMFHLateralFilm;
@@ -47,6 +47,7 @@ class Result {
            double s2ToMFHAPFilm, String focalFilmDistanceUnits, String s2ToFilmLateralUnits,
            String s2ToMFHLateralFilmUnits, String s2ToFilmAPUnits, String s2ToMFHAPFilmUnits, String resultsUnits) {
         this.name = new SimpleStringProperty(name);
+        this.resultUnits = new SimpleStringProperty(resultsUnits);
 
         // Get input
         this.focalFilmDistance = new SimpleDoubleProperty(focalFilmDistance);
@@ -184,6 +185,10 @@ class Result {
 
     StringProperty nameProperty() {
         return name;
+    }
+
+    StringProperty resultUnitsProperty() {
+        return resultUnits;
     }
 
     DoubleProperty focalFilmDistanceProperty() {

@@ -49,6 +49,8 @@ public class MainController {
     @FXML
     public TableColumn<Result, Double> s2ToMFHLateralFilmCol;
     @FXML
+    public TableColumn<Result, String> unitsCol;
+    @FXML
     public TableColumn<Result, Double> s2ToMFHTrueCol;
     @FXML
     public TableColumn<Result, Double> s2ToFilmAPCol;
@@ -117,6 +119,7 @@ public class MainController {
         s2ToMFHLateralFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHLateralFilmProperty().asObject());
         s2ToFilmAPCol.setCellValueFactory(cellData -> cellData.getValue().s2ToFilmAPProperty().asObject());
         s2ToMFHAPFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHAPFilmProperty().asObject());
+        unitsCol.setCellValueFactory(cellData -> cellData.getValue().resultUnitsProperty());
         s2ToMFHTrueCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHTrueProperty().asObject());
         MFHToFilmTrueCol.setCellValueFactory(cellData -> cellData.getValue().MFHToFilmTrueProperty().asObject());
         S2s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2s2ToMFHOffsetProperty().asObject());

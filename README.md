@@ -30,6 +30,8 @@ Fix: Go to `System Preferences->Security & Privacy->General` and click on `Open 
 
 ## How to Use
 
+Make measurements in accordance to the instructions in the [Usage Instructions PDF](https://github.com/dereklopes/PelvicRotationCalculator/blob/master/UsageInstructions.pdf)
+
 Once you have your measurements, input them in the input section and select the units for the measurements. Then press the "Calculate" button.
 
 The two tables show your input and your results. As you make more calculations, the tables will fill with your input and results. 
