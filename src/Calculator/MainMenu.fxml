@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox minHeight="400.0" minWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Calculator.MainController">
+<VBox minHeight="400.0" minWidth="1440.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Calculator.MainController">
    <children>
       <MenuBar fx:id="mainMenu">
         <menus>
@@ -137,12 +137,13 @@
                         </TableView>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" maxWidth="227.0">
+                  <VBox alignment="CENTER">
                      <children>
                         <Label text="Results" />
                         <TableView fx:id="resultsTable">
                           <columns>
-                            <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="110.0" text="True S2 to MFH" />
+                              <TableColumn fx:id="unitsCol" maxWidth="40.0" minWidth="-Infinity" prefWidth="40.0" text="Units" />
+                            <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="105.0" text="True S2 to MFH" />
                             <TableColumn fx:id="MFHToFilmTrueCol" minWidth="-Infinity" prefWidth="115.0" text="True MFH to Film" />
                           </columns>
                         </TableView>
