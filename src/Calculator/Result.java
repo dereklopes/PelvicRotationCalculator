@@ -5,23 +5,26 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-class Result {
-    private StringProperty name;
-    private StringProperty resultUnits;
-    private DoubleProperty focalFilmDistance;
-    private DoubleProperty s2ToFilmLateral;
-    private DoubleProperty s2ToMFHLateralFilm;
-    private DoubleProperty s2ToMFHTrue;
-    private DoubleProperty s2ToFilmAP;
-    private DoubleProperty MFHToFilmTrue;
-    private DoubleProperty s2ToMFHAPFilm;
-    private DoubleProperty s2s2ToMFHOffset;
-    private DoubleProperty s2RotationDegree;
-    private DoubleProperty MFHs2ToMFHOffset;
-    private DoubleProperty MFHRotationDegree;
+class Result implements Serializable {
+    private transient StringProperty name;
+    private transient StringProperty resultUnits;
+    private transient DoubleProperty focalFilmDistance;
+    private transient DoubleProperty s2ToFilmLateral;
+    private transient DoubleProperty s2ToMFHLateralFilm;
+    private transient DoubleProperty s2ToMFHTrue;
+    private transient DoubleProperty s2ToFilmAP;
+    private transient DoubleProperty MFHToFilmTrue;
+    private transient DoubleProperty s2ToMFHAPFilm;
+    private transient DoubleProperty s2s2ToMFHOffset;
+    private transient DoubleProperty s2RotationDegree;
+    private transient DoubleProperty MFHs2ToMFHOffset;
+    private transient DoubleProperty MFHRotationDegree;
 
     private String focalFilmDistanceUnits;
     private String s2ToFilmLateralUnits;
@@ -233,5 +236,82 @@ class Result {
 
     DoubleProperty MFHRotationDegreeProperty() {
         return MFHRotationDegree;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws Exception {
+        oos.defaultWriteObject();
+        oos.writeObject(this.name.get());
+        oos.writeObject(this.resultUnits.get());
+        oos.writeObject(this.focalFilmDistance.get());
+        oos.writeObject(this.s2ToFilmLateral.get());
+        oos.writeObject(this.s2ToMFHLateralFilm.get());
+        oos.writeObject(this.s2ToMFHTrue.get());
+        oos.writeObject(this.s2ToMFHAPFilm.get());
+        oos.writeObject(this.s2ToFilmAP.get());
+        oos.writeObject(this.MFHToFilmTrue.get());
+        oos.writeObject(this.s2s2ToMFHOffset.get());
+        oos.writeObject(this.s2RotationDegree.get());
+        oos.writeObject(this.MFHs2ToMFHOffset.get());
+        oos.writeObject(this.MFHRotationDegree.get());
+    }
+
+    private void readObject(ObjectInputStream ois) throws Exception {
+        ois.defaultReadObject();
+        this.name = new SimpleStringProperty((String)ois.readObject());
+        this.resultUnits = new SimpleStringProperty((String)ois.readObject());
+        this.focalFilmDistance = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2ToFilmLateral = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2ToMFHLateralFilm = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2ToMFHTrue = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2ToMFHAPFilm = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2ToFilmAP = new SimpleDoubleProperty((Double)ois.readObject());
+        this.MFHToFilmTrue = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2s2ToMFHOffset = new SimpleDoubleProperty((Double)ois.readObject());
+        this.s2RotationDegree = new SimpleDoubleProperty((Double)ois.readObject());
+        this.MFHs2ToMFHOffset = new SimpleDoubleProperty((Double)ois.readObject());
+        this.MFHRotationDegree = new SimpleDoubleProperty((Double)ois.readObject());
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Name: ");
+        sb.append(this.name.get());
+        sb.append("\n");
+        sb.append("Result Units: ");
+        sb.append(this.resultUnits.get());
+        sb.append("\n");
+        sb.append("Focal Film Distance: ");
+        sb.append(this.focalFilmDistance.get());
+        sb.append("\n");
+        sb.append("S2 To Film Lateral: ");
+        sb.append(this.s2ToFilmLateral.get());
+        sb.append("\n");
+        sb.append("S2 To MFH Lateral Film: ");
+        sb.append(this.s2ToMFHLateralFilm.get());
+        sb.append("\n");
+        sb.append("S2 To MFH True: ");
+        sb.append(this.s2ToMFHTrue.get());
+        sb.append("\n");
+        sb.append("S2 To MFH AP Film: ");
+        sb.append(this.s2ToMFHAPFilm.get());
+        sb.append("\n");
+        sb.append("S2 To Film AP: ");
+        sb.append(this.s2ToFilmAP.get());
+        sb.append("\n");
+        sb.append("MFH To Film True: ");
+        sb.append(this.MFHToFilmTrue.get());
+        sb.append("\n");
+        sb.append("S2 To MFH Offset (S2): ");
+        sb.append(this.s2s2ToMFHOffset.get());
+        sb.append("\n");
+        sb.append("Rotation Degree (S2): ");
+        sb.append(this.s2RotationDegree.get());
+        sb.append("\n");
+        sb.append("S2 To MFH Offset (MFH): ");
+        sb.append(this.MFHs2ToMFHOffset.get());
+        sb.append("\n");
+        sb.append("Rotation Degree (MFH): ");
+        sb.append(this.MFHRotationDegree.get());
+        return sb.toString();
     }
 }

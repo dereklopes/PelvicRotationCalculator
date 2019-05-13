@@ -13,8 +13,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MainController {
     @FXML
@@ -83,15 +90,20 @@ public class MainController {
     @FXML
     public MenuBar mainMenu;
     @FXML
+    public MenuItem fileOpen;
+    @FXML
+    public MenuItem fileSave;
+    @FXML
+    public MenuItem fileSaveAs;
+    @FXML
     public MenuItem fileClose;
     @FXML
     public MenuItem helpAbout;
 
-    private ObservableList<Result> inputTableData = FXCollections.observableArrayList();
-    private ObservableList<Result> resultsTableData = FXCollections.observableArrayList();
-    private ObservableList<Result> S2resultsTableData = FXCollections.observableArrayList();
-    private ObservableList<Result> MFHresultsTableData = FXCollections.observableArrayList();
+    private ArrayList<Result> resultList;
+    private ObservableList<Result> tableData = FXCollections.observableArrayList();
     private HostServices hostServices;
+    private File currentFile;
 
     @FXML
     private void initialize() {
@@ -111,6 +123,8 @@ public class MainController {
         for (ChoiceBox unitChoiceBox : unitChoiceBoxes) {
             unitChoiceBox.setItems(FXCollections.observableArrayList("in", "cm", "mm"));
         }
+
+        resultList = new ArrayList<>();
 
         // Populate table data
         nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -145,18 +159,99 @@ public class MainController {
                     s2ToMFHAPFilmUnitsBox.getValue().toString(),
                     resultUnitsBox.getValue().toString()
             );
-            inputTableData.add(result);
-            inputTable.setItems(inputTableData);
-            resultsTableData.add(result);
-            resultsTable.setItems(resultsTableData);
-            S2resultsTableData.add(result);
-            S2resultsTable.setItems(S2resultsTableData);
-            MFHresultsTableData.add(result);
-            MFHresultsTable.setItems(MFHresultsTableData);
+            this.resultList.add(result);
+            updateTables(this.resultList);
         } catch (NumberFormatException e) {
             showErrorPopup("Provided values are invalid. Please try again.");
         } catch (Exception e) {
             showErrorPopup("An error occurred: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void save() {
+        if (this.currentFile != null) {
+            try {
+                FileOutputStream fos = new FileOutputStream(currentFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(resultList);
+                fos.close();
+                oos.close();
+            } catch (FileNotFoundException e) {
+                showErrorPopup("Could not find file. Error: " + e.getMessage());
+            } catch (IOException e) {
+                showErrorPopup("An error occurred: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            saveAs();
+        }
+    }
+
+    @FXML
+    public void saveAs() {
+        // Create and configure save dialogue
+        final Stage saveWindow = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "PRC files (*.prc)", "*.prc");
+        fileChooser.getExtensionFilters().add(extFilter);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        Date curDateTime = new Date();
+        fileChooser.setInitialFileName("results_" + dateFormat.format(curDateTime));
+
+        // Show save dialogue and save file
+        File saveFile = fileChooser.showSaveDialog(saveWindow);
+        if (saveFile != null) {
+            try {
+                FileOutputStream fos = new FileOutputStream(saveFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(resultList);
+                fos.close();
+                oos.close();
+                this.currentFile = saveFile;
+                CalculatorApplication.getApp().setOpenFileName(saveFile.getName());
+            } catch (FileNotFoundException e) {
+                showErrorPopup("Could not find file. Error: " + e.getMessage());
+            } catch (IOException e) {
+                showErrorPopup("An error occurred: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void open() {
+        // Create and configure open dialogue
+        final Stage openWindow = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "PRC files (*.prc)", "*.prc");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show open dialogue and load file
+        File openFile = fileChooser.showOpenDialog(openWindow);
+        if (openFile != null) {
+            try {
+                FileInputStream fis = new FileInputStream(openFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Object readObject = ois.readObject();
+                if (readObject instanceof ArrayList) {
+                    ArrayList readArrayList = (ArrayList)readObject;
+                    if (readArrayList.size() != 0)
+                        this.resultList = (ArrayList<Result>)readObject;
+                } else {
+                    showErrorPopup("Selected file is not a valid PRC file. Cannot load results.");
+                }
+                fis.close();
+                ois.close();
+
+                updateTables(this.resultList);
+            } catch (FileNotFoundException e) {
+                showErrorPopup("Could not find file. Error: " + e.getMessage());
+            } catch (IOException | ClassNotFoundException e) {
+                showErrorPopup("An error occurred: " + e.getMessage());
+            }
         }
     }
 
@@ -196,6 +291,17 @@ public class MainController {
 
     void setHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
+    }
+
+    /**
+     * Updates table values based on the
+     */
+    private void updateTables(ArrayList<Result> results) {
+        this.tableData.setAll(results);
+        this.inputTable.setItems(tableData);
+        this.resultsTable.setItems(tableData);
+        this.S2resultsTable.setItems(tableData);
+        this.MFHresultsTable.setItems(tableData);
     }
 
     private void showErrorPopup(String message) {
