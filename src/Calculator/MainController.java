@@ -4,13 +4,12 @@ import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -98,12 +97,15 @@ public class MainController {
     @FXML
     public MenuItem fileClose;
     @FXML
+    public MenuItem editDeleteSelectedRow;
+    @FXML
     public MenuItem helpAbout;
 
     private ArrayList<Result> resultList;
     private ObservableList<Result> tableData = FXCollections.observableArrayList();
     private HostServices hostServices;
     private File currentFile;
+    private Integer selectedRow = -1;
 
     @FXML
     private void initialize() {
@@ -123,6 +125,16 @@ public class MainController {
         for (ChoiceBox unitChoiceBox : unitChoiceBoxes) {
             unitChoiceBox.setItems(FXCollections.observableArrayList("in", "cm", "mm"));
         }
+
+        // set context menus for tables
+        ContextMenu tableContextMenu = new ContextMenu();
+        MenuItem deleteRow = new MenuItem("Delete Row...");
+        deleteRow.setOnAction(e -> deleteRow());
+        tableContextMenu.getItems().add(deleteRow);
+        inputTable.setContextMenu(tableContextMenu);
+        resultsTable.setContextMenu(tableContextMenu);
+        S2resultsTable.setContextMenu(tableContextMenu);
+        MFHresultsTable.setContextMenu(tableContextMenu);
 
         resultList = new ArrayList<>();
 
@@ -261,23 +273,79 @@ public class MainController {
     }
 
     @FXML
+    public void selectRow() {
+        int selectedInput = inputTable.getSelectionModel().getFocusedIndex();
+        int selectedResult = resultsTable.getSelectionModel().getFocusedIndex();
+        int selectedS2Result = S2resultsTable.getSelectionModel().getFocusedIndex();
+        int selectedMFHResult = MFHresultsTable.getSelectionModel().getFocusedIndex();
+        if (selectedInput != selectedRow) {
+            selectedRow = selectedInput;
+            resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            S2resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            MFHresultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        } else if (selectedResult != this.selectedRow) {
+            selectedRow = selectedResult;
+            inputTable.getSelectionModel().clearAndSelect(selectedRow);
+            S2resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            MFHresultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        } else if (selectedS2Result != this.selectedRow) {
+            selectedRow = selectedS2Result;
+            inputTable.getSelectionModel().clearAndSelect(selectedRow);
+            resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            MFHresultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        } else if (selectedMFHResult != this.selectedRow) {
+            selectedRow = selectedMFHResult;
+            inputTable.getSelectionModel().clearAndSelect(selectedRow);
+            resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            S2resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        }
+    }
+
+    @FXML
+    public void deleteRow() {
+        if (resultList.isEmpty())
+            return;
+        // delete or backspace was pressed, show confirmation window and delete the row from each table if confirmed
+        final Stage confirmDeleteWindow = new Stage();
+        Integer readableSelectedRow = selectedRow + 1;
+        Label confirmDialogue = new Label("Are you sure you want to delete row " +
+                readableSelectedRow.toString() + " titled '" + resultList.get(selectedRow).nameProperty().getValue()
+                + "'?");
+        Button deleteButton = new Button("Delete");
+        deleteButton.setStyle("-fx-background-color: #ff5454; -fx-text-fill: white");
+        deleteButton.setOnAction(e -> {
+            resultList.remove(selectedRow.intValue());
+            updateTables(resultList);
+            confirmDeleteWindow.close();
+        });
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setCancelButton(true);
+        cancelButton.setDefaultButton(true);
+        cancelButton.setOnAction(e -> confirmDeleteWindow.close());
+        Scene confirmDeleteScene = new Scene(VBoxBuilder.create()
+                .children(confirmDialogue, HBoxBuilder.create()
+                        .children(deleteButton, cancelButton)
+                        .alignment(Pos.CENTER)
+                        .padding(new Insets(10))
+                        .spacing(5)
+                        .build())
+                .alignment(Pos.CENTER)
+                .padding(new Insets(10))
+                .spacing(5)
+                .build()
+        );
+        confirmDeleteWindow.setScene(confirmDeleteScene);
+        confirmDeleteWindow.show();
+    }
+
+    @FXML
     public void showAbout() {
         final Stage aboutWindow = new Stage();
         Label instructions = new Label("Visit this site for information and instructions:");
         Button closeButton = new Button("Close");
-        closeButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                aboutWindow.close();
-            }
-        });
+        closeButton.setOnAction(e -> aboutWindow.close());
         Hyperlink gitLink = new Hyperlink("https://github.com/dereklopes/PelvicRotationCalculator");
-        gitLink.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                hostServices.showDocument(gitLink.getText());
-            }
-        });
+        gitLink.setOnAction(event -> hostServices.showDocument(gitLink.getText()));
         Scene aboutScene = new Scene(VBoxBuilder.create()
                 .children(instructions, gitLink, closeButton)
                 .alignment(Pos.CENTER)
@@ -308,12 +376,7 @@ public class MainController {
         final Stage errorWindow = new Stage();
         errorWindow.initModality(Modality.WINDOW_MODAL);
         Button closeButton = new Button("Close");
-        closeButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                errorWindow.close();
-            }
-        });
+        closeButton.setOnAction(e -> errorWindow.close());
         Scene errorScene = new Scene(VBoxBuilder.create()
                 .children(new Text(message), closeButton)
                 .alignment(Pos.CENTER)

@@ -46,6 +46,15 @@
                   <MenuItem fx:id="fileClose" mnemonicParsing="false" onAction="#close" text="Close" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+              <items>
+                <MenuItem fx:id="editDeleteSelectedRow" mnemonicParsing="false" onAction="#deleteRow" text="Delete Selected Row">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="BACK_SPACE" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem fx:id="helpAbout" mnemonicParsing="false" onAction="#showAbout" text="About" />
@@ -60,7 +69,7 @@
                   <VBox prefWidth="200.0">
                      <children>
                         <Label text="Name/ID:" />
-                        <TextField fx:id="nameField" text="test" />
+                        <TextField fx:id="nameField" />
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
@@ -143,7 +152,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TableView fx:id="inputTable" layoutX="10.0" layoutY="10.0">
+                        <TableView fx:id="inputTable" layoutX="10.0" layoutY="10.0" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
                               <TableColumn fx:id="nameCol" minWidth="-Infinity" prefWidth="110.0" text="Name" />
                               <TableColumn fx:id="focalFilmDistanceCol" minWidth="-Infinity" prefWidth="100.0" text="Focal film dist." />
@@ -158,7 +167,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label text="Results" />
-                        <TableView fx:id="resultsTable">
+                        <TableView fx:id="resultsTable" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
                               <TableColumn fx:id="unitsCol" maxWidth="40.0" minWidth="-Infinity" prefWidth="40.0" text="Units" />
                               <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="105.0" text="True S2 to MFH" />
@@ -170,7 +179,7 @@
                   <VBox alignment="CENTER" maxWidth="227.0">
                      <children>
                         <Label text="Results (S2 as Axis of Rotation)" />
-                        <TableView fx:id="S2resultsTable">
+                        <TableView fx:id="S2resultsTable" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
                               <TableColumn fx:id="S2s2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
                               <TableColumn fx:id="rotationalDegreeColS2" minWidth="-Infinity" prefWidth="75.0" text="Rotation" />
@@ -181,7 +190,7 @@
                   <VBox alignment="CENTER" maxWidth="227.0">
                      <children>
                         <Label text="Results (MFH as Axis of Rotation)" />
-                        <TableView fx:id="MFHresultsTable">
+                        <TableView fx:id="MFHresultsTable" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
                               <TableColumn fx:id="MFHs2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
                               <TableColumn fx:id="rotationalDegreeColMFH" minWidth="-Infinity" prefWidth="75.0" text="Rotation" />
