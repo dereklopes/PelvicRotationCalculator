@@ -344,7 +344,8 @@ public class MainController {
         Label instructions = new Label("Visit this site for information and instructions:");
         Button closeButton = new Button("Close");
         closeButton.setOnAction(e -> aboutWindow.close());
-        Hyperlink gitLink = new Hyperlink("https://github.com/dereklopes/PelvicRotationCalculator");
+        String readmeLink = "https://github.com/dereklopes/PelvicRotationCalculator/blob/master/README.md";
+        Hyperlink gitLink = new Hyperlink(readmeLink);
         gitLink.setOnAction(event -> hostServices.showDocument(gitLink.getText()));
         Scene aboutScene = new Scene(VBoxBuilder.create()
                 .children(instructions, gitLink, closeButton)
