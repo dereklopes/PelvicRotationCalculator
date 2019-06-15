@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -19,21 +20,47 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox minHeight="400.0" minWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Calculator.MainController">
+<VBox minHeight="400.0" minWidth="1440.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Calculator.MainController">
    <children>
       <MenuBar fx:id="mainMenu">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem fx:id="fileClose" mnemonicParsing="false" onAction="#close" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem fx:id="helpAbout" mnemonicParsing="false" onAction="#showAbout" text="About" />
-            </items>
-          </Menu>
-        </menus>
+         <menus>
+            <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem fx:id="fileOpen" mnemonicParsing="false" onAction="#open" text="Open...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#save" text="Save">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" onAction="#saveAs" text="Save As...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="fileClose" mnemonicParsing="false" onAction="#close" text="Close" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+              <items>
+                <MenuItem fx:id="editDeleteSelectedRow" mnemonicParsing="false" onAction="#deleteRow" text="Delete Selected Row">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="BACK_SPACE" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem fx:id="helpAbout" mnemonicParsing="false" onAction="#showAbout" text="About" />
+               </items>
+            </Menu>
+         </menus>
       </MenuBar>
       <VBox spacing="5.0">
          <children>
@@ -48,7 +75,7 @@
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                           <Label minWidth="120.0" text="Focal film distance:" />
+                        <Label minWidth="120.0" text="Focal film distance:" />
                         <HBox spacing="5.0">
                            <children>
                               <TextField id="focalFilmDistanceField" fx:id="focalFilmDistanceField" prefWidth="100.0" />
@@ -60,7 +87,7 @@
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                           <Label minWidth="210.0" text="S2/MFH Distance to Film (lateral):" />
+                        <Label minWidth="210.0" text="S2/MFH Distance to Film (lateral):" />
                         <HBox spacing="5.0">
                            <children>
                               <TextField id="s2ToFilmLateralField" fx:id="s2ToFilmLateralField" prefHeight="27.0" prefWidth="154.0" />
@@ -72,7 +99,7 @@
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                           <Label minWidth="185.0" text="S2 to MFH (lateral, from film):" />
+                        <Label minWidth="185.0" text="S2 to MFH (lateral, from film):" />
                         <HBox spacing="5.0">
                            <children>
                               <TextField id="s2ToMFHLateralFilmField" fx:id="s2ToMFHLateralFilmField" prefHeight="27.0" prefWidth="128.0" />
@@ -84,7 +111,7 @@
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                           <Label minWidth="160.0" text="S2 Distance to Film (A-P):" />
+                        <Label minWidth="160.0" text="S2 Distance to Film (A-P):" />
                         <HBox spacing="5.0">
                            <children>
                               <TextField id="s2ToFilmAPField" fx:id="s2ToFilmAPField" prefHeight="27.0" prefWidth="103.0" />
@@ -113,7 +140,7 @@
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
-                     <Button id="calculateButton" fx:id="calculateButton" defaultButton="true" mnemonicParsing="false" onAction="#calculateButtonPressed" text="Calculate" />
+                  <Button id="calculateButton" fx:id="calculateButton" defaultButton="true" mnemonicParsing="false" onAction="#calculateButtonPressed" text="Calculate" />
                </children>
             </HBox>
             <HBox spacing="5.0">
@@ -125,33 +152,34 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TableView fx:id="inputTable" layoutX="10.0" layoutY="10.0">
+                        <TableView fx:id="inputTable" layoutX="10.0" layoutY="10.0" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
-                            <TableColumn fx:id="nameCol" minWidth="-Infinity" prefWidth="110.0" text="Name" />
-                            <TableColumn fx:id="focalFilmDistanceCol" minWidth="-Infinity" prefWidth="100.0" text="Focal film dist." />
-                            <TableColumn fx:id="s2ToFilmLateralCol" minWidth="-Infinity" prefWidth="100.0" text="S2 to Film (lat.)" />
-                            <TableColumn fx:id="s2ToMFHLateralFilmCol" minWidth="-Infinity" prefWidth="135.0" text="S2 to MFH (lat., film)" />
-                            <TableColumn fx:id="s2ToFilmAPCol" minWidth="-Infinity" prefWidth="110.0" text="S2 to Film (A-P)" />
-                            <TableColumn fx:id="s2ToMFHAPFilmCol" minWidth="-Infinity" prefWidth="140.0" text="S2 to MFH (A-P, film)" />
+                              <TableColumn fx:id="nameCol" minWidth="-Infinity" prefWidth="110.0" text="Name" />
+                              <TableColumn fx:id="focalFilmDistanceCol" minWidth="-Infinity" prefWidth="100.0" text="Focal film dist." />
+                              <TableColumn fx:id="s2ToFilmLateralCol" minWidth="-Infinity" prefWidth="100.0" text="S2 to Film (lat.)" />
+                              <TableColumn fx:id="s2ToMFHLateralFilmCol" minWidth="-Infinity" prefWidth="135.0" text="S2 to MFH (lat., film)" />
+                              <TableColumn fx:id="s2ToFilmAPCol" minWidth="-Infinity" prefWidth="110.0" text="S2 to Film (A-P)" />
+                              <TableColumn fx:id="s2ToMFHAPFilmCol" minWidth="-Infinity" prefWidth="140.0" text="S2 to MFH (A-P, film)" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label text="Results" />
+                        <TableView fx:id="resultsTable" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
+                           <columns>
+                              <TableColumn fx:id="unitsCol" maxWidth="40.0" minWidth="-Infinity" prefWidth="40.0" text="Units" />
+                              <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="105.0" text="True S2 to MFH" />
+                              <TableColumn fx:id="MFHToFilmTrueCol" minWidth="-Infinity" prefWidth="115.0" text="True MFH to Film" />
                            </columns>
                         </TableView>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" maxWidth="227.0">
                      <children>
-                        <Label text="Results" />
-                        <TableView fx:id="resultsTable">
-                          <columns>
-                            <TableColumn fx:id="s2ToMFHTrueCol" minWidth="-Infinity" prefWidth="110.0" text="True S2 to MFH" />
-                            <TableColumn fx:id="MFHToFilmTrueCol" minWidth="-Infinity" prefWidth="115.0" text="True MFH to Film" />
-                          </columns>
-                        </TableView>
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER" maxWidth="227.0">
-                     <children>
                         <Label text="Results (S2 as Axis of Rotation)" />
-                        <TableView fx:id="S2resultsTable">
+                        <TableView fx:id="S2resultsTable" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
                               <TableColumn fx:id="S2s2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
                               <TableColumn fx:id="rotationalDegreeColS2" minWidth="-Infinity" prefWidth="75.0" text="Rotation" />
@@ -162,7 +190,7 @@
                   <VBox alignment="CENTER" maxWidth="227.0">
                      <children>
                         <Label text="Results (MFH as Axis of Rotation)" />
-                        <TableView fx:id="MFHresultsTable">
+                        <TableView fx:id="MFHresultsTable" onKeyReleased="#selectRow" onMouseClicked="#selectRow">
                            <columns>
                               <TableColumn fx:id="MFHs2ToMFHOffsetCol" minWidth="-Infinity" prefWidth="150.0" text="True S2 to MFH Offset" />
                               <TableColumn fx:id="rotationalDegreeColMFH" minWidth="-Infinity" prefWidth="75.0" text="Rotation" />

@@ -4,17 +4,23 @@ import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MainController {
     @FXML
@@ -49,6 +55,8 @@ public class MainController {
     @FXML
     public TableColumn<Result, Double> s2ToMFHLateralFilmCol;
     @FXML
+    public TableColumn<Result, String> unitsCol;
+    @FXML
     public TableColumn<Result, Double> s2ToMFHTrueCol;
     @FXML
     public TableColumn<Result, Double> s2ToFilmAPCol;
@@ -81,15 +89,23 @@ public class MainController {
     @FXML
     public MenuBar mainMenu;
     @FXML
+    public MenuItem fileOpen;
+    @FXML
+    public MenuItem fileSave;
+    @FXML
+    public MenuItem fileSaveAs;
+    @FXML
     public MenuItem fileClose;
+    @FXML
+    public MenuItem editDeleteSelectedRow;
     @FXML
     public MenuItem helpAbout;
 
-    private ObservableList<Result> inputTableData = FXCollections.observableArrayList();
-    private ObservableList<Result> resultsTableData = FXCollections.observableArrayList();
-    private ObservableList<Result> S2resultsTableData = FXCollections.observableArrayList();
-    private ObservableList<Result> MFHresultsTableData = FXCollections.observableArrayList();
+    private ArrayList<Result> resultList;
+    private ObservableList<Result> tableData = FXCollections.observableArrayList();
     private HostServices hostServices;
+    private File currentFile;
+    private Integer selectedRow = -1;
 
     @FXML
     private void initialize() {
@@ -110,6 +126,18 @@ public class MainController {
             unitChoiceBox.setItems(FXCollections.observableArrayList("in", "cm", "mm"));
         }
 
+        // set context menus for tables
+        ContextMenu tableContextMenu = new ContextMenu();
+        MenuItem deleteRow = new MenuItem("Delete Row...");
+        deleteRow.setOnAction(e -> deleteRow());
+        tableContextMenu.getItems().add(deleteRow);
+        inputTable.setContextMenu(tableContextMenu);
+        resultsTable.setContextMenu(tableContextMenu);
+        S2resultsTable.setContextMenu(tableContextMenu);
+        MFHresultsTable.setContextMenu(tableContextMenu);
+
+        resultList = new ArrayList<>();
+
         // Populate table data
         nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         focalFilmDistanceCol.setCellValueFactory(cellData -> cellData.getValue().focalFilmDistanceProperty().asObject());
@@ -117,6 +145,7 @@ public class MainController {
         s2ToMFHLateralFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHLateralFilmProperty().asObject());
         s2ToFilmAPCol.setCellValueFactory(cellData -> cellData.getValue().s2ToFilmAPProperty().asObject());
         s2ToMFHAPFilmCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHAPFilmProperty().asObject());
+        unitsCol.setCellValueFactory(cellData -> cellData.getValue().resultUnitsProperty());
         s2ToMFHTrueCol.setCellValueFactory(cellData -> cellData.getValue().s2ToMFHTrueProperty().asObject());
         MFHToFilmTrueCol.setCellValueFactory(cellData -> cellData.getValue().MFHToFilmTrueProperty().asObject());
         S2s2ToMFHOffsetCol.setCellValueFactory(cellData -> cellData.getValue().s2s2ToMFHOffsetProperty().asObject());
@@ -142,18 +171,99 @@ public class MainController {
                     s2ToMFHAPFilmUnitsBox.getValue().toString(),
                     resultUnitsBox.getValue().toString()
             );
-            inputTableData.add(result);
-            inputTable.setItems(inputTableData);
-            resultsTableData.add(result);
-            resultsTable.setItems(resultsTableData);
-            S2resultsTableData.add(result);
-            S2resultsTable.setItems(S2resultsTableData);
-            MFHresultsTableData.add(result);
-            MFHresultsTable.setItems(MFHresultsTableData);
+            this.resultList.add(result);
+            updateTables(this.resultList);
         } catch (NumberFormatException e) {
             showErrorPopup("Provided values are invalid. Please try again.");
         } catch (Exception e) {
             showErrorPopup("An error occurred: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void save() {
+        if (this.currentFile != null) {
+            try {
+                FileOutputStream fos = new FileOutputStream(currentFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(resultList);
+                fos.close();
+                oos.close();
+            } catch (FileNotFoundException e) {
+                showErrorPopup("Could not find file. Error: " + e.getMessage());
+            } catch (IOException e) {
+                showErrorPopup("An error occurred: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            saveAs();
+        }
+    }
+
+    @FXML
+    public void saveAs() {
+        // Create and configure save dialogue
+        final Stage saveWindow = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "PRC files (*.prc)", "*.prc");
+        fileChooser.getExtensionFilters().add(extFilter);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        Date curDateTime = new Date();
+        fileChooser.setInitialFileName("results_" + dateFormat.format(curDateTime));
+
+        // Show save dialogue and save file
+        File saveFile = fileChooser.showSaveDialog(saveWindow);
+        if (saveFile != null) {
+            try {
+                FileOutputStream fos = new FileOutputStream(saveFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(resultList);
+                fos.close();
+                oos.close();
+                this.currentFile = saveFile;
+                CalculatorApplication.getApp().setOpenFileName(saveFile.getName());
+            } catch (FileNotFoundException e) {
+                showErrorPopup("Could not find file. Error: " + e.getMessage());
+            } catch (IOException e) {
+                showErrorPopup("An error occurred: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void open() {
+        // Create and configure open dialogue
+        final Stage openWindow = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "PRC files (*.prc)", "*.prc");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show open dialogue and load file
+        File openFile = fileChooser.showOpenDialog(openWindow);
+        if (openFile != null) {
+            try {
+                FileInputStream fis = new FileInputStream(openFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Object readObject = ois.readObject();
+                if (readObject instanceof ArrayList) {
+                    ArrayList readArrayList = (ArrayList)readObject;
+                    if (readArrayList.size() != 0)
+                        this.resultList = (ArrayList<Result>)readObject;
+                } else {
+                    showErrorPopup("Selected file is not a valid PRC file. Cannot load results.");
+                }
+                fis.close();
+                ois.close();
+
+                updateTables(this.resultList);
+            } catch (FileNotFoundException e) {
+                showErrorPopup("Could not find file. Error: " + e.getMessage());
+            } catch (IOException | ClassNotFoundException e) {
+                showErrorPopup("An error occurred: " + e.getMessage());
+            }
         }
     }
 
@@ -163,23 +273,80 @@ public class MainController {
     }
 
     @FXML
+    public void selectRow() {
+        int selectedInput = inputTable.getSelectionModel().getFocusedIndex();
+        int selectedResult = resultsTable.getSelectionModel().getFocusedIndex();
+        int selectedS2Result = S2resultsTable.getSelectionModel().getFocusedIndex();
+        int selectedMFHResult = MFHresultsTable.getSelectionModel().getFocusedIndex();
+        if (selectedInput != selectedRow) {
+            selectedRow = selectedInput;
+            resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            S2resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            MFHresultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        } else if (selectedResult != this.selectedRow) {
+            selectedRow = selectedResult;
+            inputTable.getSelectionModel().clearAndSelect(selectedRow);
+            S2resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            MFHresultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        } else if (selectedS2Result != this.selectedRow) {
+            selectedRow = selectedS2Result;
+            inputTable.getSelectionModel().clearAndSelect(selectedRow);
+            resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            MFHresultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        } else if (selectedMFHResult != this.selectedRow) {
+            selectedRow = selectedMFHResult;
+            inputTable.getSelectionModel().clearAndSelect(selectedRow);
+            resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+            S2resultsTable.getSelectionModel().clearAndSelect(selectedRow);
+        }
+    }
+
+    @FXML
+    public void deleteRow() {
+        if (resultList.isEmpty())
+            return;
+        // delete or backspace was pressed, show confirmation window and delete the row from each table if confirmed
+        final Stage confirmDeleteWindow = new Stage();
+        Integer readableSelectedRow = selectedRow + 1;
+        Label confirmDialogue = new Label("Are you sure you want to delete row " +
+                readableSelectedRow.toString() + " titled '" + resultList.get(selectedRow).nameProperty().getValue()
+                + "'?");
+        Button deleteButton = new Button("Delete");
+        deleteButton.setStyle("-fx-background-color: #ff5454; -fx-text-fill: white");
+        deleteButton.setOnAction(e -> {
+            resultList.remove(selectedRow.intValue());
+            updateTables(resultList);
+            confirmDeleteWindow.close();
+        });
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setCancelButton(true);
+        cancelButton.setDefaultButton(true);
+        cancelButton.setOnAction(e -> confirmDeleteWindow.close());
+        Scene confirmDeleteScene = new Scene(VBoxBuilder.create()
+                .children(confirmDialogue, HBoxBuilder.create()
+                        .children(deleteButton, cancelButton)
+                        .alignment(Pos.CENTER)
+                        .padding(new Insets(10))
+                        .spacing(5)
+                        .build())
+                .alignment(Pos.CENTER)
+                .padding(new Insets(10))
+                .spacing(5)
+                .build()
+        );
+        confirmDeleteWindow.setScene(confirmDeleteScene);
+        confirmDeleteWindow.show();
+    }
+
+    @FXML
     public void showAbout() {
         final Stage aboutWindow = new Stage();
         Label instructions = new Label("Visit this site for information and instructions:");
         Button closeButton = new Button("Close");
-        closeButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                aboutWindow.close();
-            }
-        });
-        Hyperlink gitLink = new Hyperlink("https://github.com/dereklopes/PelvicRotationCalculator");
-        gitLink.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                hostServices.showDocument(gitLink.getText());
-            }
-        });
+        closeButton.setOnAction(e -> aboutWindow.close());
+        String readmeLink = "https://github.com/dereklopes/PelvicRotationCalculator/blob/master/README.md";
+        Hyperlink gitLink = new Hyperlink(readmeLink);
+        gitLink.setOnAction(event -> hostServices.showDocument(gitLink.getText()));
         Scene aboutScene = new Scene(VBoxBuilder.create()
                 .children(instructions, gitLink, closeButton)
                 .alignment(Pos.CENTER)
@@ -195,16 +362,22 @@ public class MainController {
         this.hostServices = hostServices;
     }
 
+    /**
+     * Updates table values based on the
+     */
+    private void updateTables(ArrayList<Result> results) {
+        this.tableData.setAll(results);
+        this.inputTable.setItems(tableData);
+        this.resultsTable.setItems(tableData);
+        this.S2resultsTable.setItems(tableData);
+        this.MFHresultsTable.setItems(tableData);
+    }
+
     private void showErrorPopup(String message) {
         final Stage errorWindow = new Stage();
         errorWindow.initModality(Modality.WINDOW_MODAL);
         Button closeButton = new Button("Close");
-        closeButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                errorWindow.close();
-            }
-        });
+        closeButton.setOnAction(e -> errorWindow.close());
         Scene errorScene = new Scene(VBoxBuilder.create()
                 .children(new Text(message), closeButton)
                 .alignment(Pos.CENTER)

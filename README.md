@@ -44,9 +44,6 @@ To contribute, please open a pull request. New code must have unit tests or the 
 
 ## TODO
 
-- Pictures and tool tips to help with correlating input fields to real world measurements
+- Tool tips to help with correlating input fields to real world measurements (currently found in instruction PDF)
 - Properly sign JAR
-- Show units in input and result tables
-- Saving and loading of calculations
-- Deletion of result rows in tables
 - Setting of the application "dock name" on Mac OS (currently shows as `java`)
