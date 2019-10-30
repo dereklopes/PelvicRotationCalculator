@@ -20,6 +20,42 @@ Click [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/o
 
 To run, simply open the downloaded program file.
 
+## Usage Instructions
+
+### Making a Calculation
+Make measurements in accordance to the instructions in the [Usage Instructions PDF](https://github.com/dereklopes/PelvicRotationCalculator/blob/master/UsageInstructions.pdf)
+
+Once you have your measurements, input them in the input section and select the units for the measurements. Then press the "Calculate" button.
+
+### Understanding the Results
+
+The three tables show your input and your results. As you make more calculations, the tables will fill with your input and results. 
+
+Use the "Name" input field to help you differentiate between calculations.
+
+### Saving
+
+To save your calculations, click the "File" tab on the menu bar to open a drop down menu and select "Save" (keyboard shortcut ctrl + s on windows, command + s on mac). If you are saving for the first time, a file selection window will open to select a destination to save your calculations. If you are saving and already saved calcuation, it will automatically save to the original file.
+
+To save to a new location, select the "Save as..." option under the "File" tab on the menu bar (keyboard shortcut ctrl + shift + s on windows, command + shift + s on mac). This will always ask you to choose a location to save to.
+
+### Opening Saved Results
+
+To re-open a data file with saved results, do the following:
+
+1. Open the Pelvic Rotation Calculator application
+2. Click on the drop down "File" menu on the menu bar and select "Open" (keyboard shortcut ctrl + o on windows, command + o on mac). This will open a file selection window.
+3. In the file selection window, open the folder where your results file was saved and select the saved data file.
+4. Click on the "open" button to view the results. This will populate the tables with your saved results.
+
+### Deleting Results
+
+There are 3 ways to delete a result. First, select the result you wish to delete by left-clicking on the row. This will highlight the row. Next, do one of the following:
+
+1. Right-click on the row and left-click "Delete Row..."
+2. Click on the "Edit" tab on the menu bar and select "Delete Selected Row" from the drop down menu
+3. Press the keyboard shortcut ctrl + backspace on windows or command + delete on mac
+
 ## Run Issues
 
 ### Mac OS
@@ -27,16 +63,6 @@ To run, simply open the downloaded program file.
 Error: `"PelvicRotationCalculator.jar" can't be opened because it is from an unidentified developer."`
 
 Fix: Go to `System Preferences->Security & Privacy->General` and click on `Open Anyway`
-
-## How to Use
-
-Make measurements in accordance to the instructions in the [Usage Instructions PDF](https://github.com/dereklopes/PelvicRotationCalculator/blob/master/UsageInstructions.pdf)
-
-Once you have your measurements, input them in the input section and select the units for the measurements. Then press the "Calculate" button.
-
-The two tables show your input and your results. As you make more calculations, the tables will fill with your input and results. 
-
-Use the "Name" input field to help you differentiate between calculations.
 
 ## Contributions
 
