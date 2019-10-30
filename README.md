@@ -14,6 +14,12 @@ The Java Runtime Environment is required to run this application. Older versions
 
 To install Java or update to the latest version, download it [here](https://java.com/download).
 
+## Installation
+
+Click [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/out/build/PelvicRotationCalculator.jar) to download the jar file.
+
+To run, simply open the downloaded program file.
+
 ## Usage Instructions
 
 ### Making a Calculation
@@ -49,12 +55,6 @@ There are 3 ways to delete a result. First, select the result you wish to delete
 1. Right-click on the row and left-click "Delete Row..."
 2. Click on the "Edit" tab on the menu bar and select "Delete Selected Row" from the drop down menu
 3. Press the keyboard shortcut ctrl + backspace on windows or command + delete on mac
-
-## Installation
-
-Click [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/out/build/PelvicRotationCalculator.jar) to download the jar file.
-
-To run, simply open the downloaded program file.
 
 ## Run Issues
 
