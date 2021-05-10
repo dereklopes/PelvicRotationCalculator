@@ -9,8 +9,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBoxBuilder;
-import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -322,18 +322,18 @@ public class MainController {
         cancelButton.setCancelButton(true);
         cancelButton.setDefaultButton(true);
         cancelButton.setOnAction(e -> confirmDeleteWindow.close());
-        Scene confirmDeleteScene = new Scene(VBoxBuilder.create()
-                .children(confirmDialogue, HBoxBuilder.create()
-                        .children(deleteButton, cancelButton)
-                        .alignment(Pos.CENTER)
-                        .padding(new Insets(10))
-                        .spacing(5)
-                        .build())
-                .alignment(Pos.CENTER)
-                .padding(new Insets(10))
-                .spacing(5)
-                .build()
-        );
+		VBox confirmDeleteVBox = new VBox();
+		confirmDeleteVBox.setAlignment(Pos.CENTER);
+		confirmDeleteVBox.getChildren().add(confirmDialogue);
+		confirmDeleteVBox.setPadding(new Insets(10));
+		confirmDeleteVBox.setSpacing(5);
+		HBox buttonHBox = new HBox();
+		buttonHBox.getChildren().addAll(deleteButton, cancelButton);
+		buttonHBox.setAlignment(Pos.CENTER);
+		buttonHBox.setPadding(new Insets(10));
+		buttonHBox.setSpacing(5);
+		confirmDeleteVBox.getChildren().add(buttonHBox);
+        Scene confirmDeleteScene = new Scene(confirmDeleteVBox);
         confirmDeleteWindow.setScene(confirmDeleteScene);
         confirmDeleteWindow.show();
     }
@@ -347,13 +347,12 @@ public class MainController {
         String readmeLink = "https://github.com/dereklopes/PelvicRotationCalculator/blob/master/README.md";
         Hyperlink gitLink = new Hyperlink(readmeLink);
         gitLink.setOnAction(event -> hostServices.showDocument(gitLink.getText()));
-        Scene aboutScene = new Scene(VBoxBuilder.create()
-                .children(instructions, gitLink, closeButton)
-                .alignment(Pos.CENTER)
-                .padding(new Insets(10))
-                .spacing(5)
-                .build()
-        );
+        VBox aboutVBox = new VBox();
+        aboutVBox.getChildren().addAll(instructions, gitLink, closeButton);
+        aboutVBox.setAlignment(Pos.CENTER);
+        aboutVBox.setPadding(new Insets(10));
+        aboutVBox.setSpacing(5);
+        Scene aboutScene = new Scene(aboutVBox);
         aboutWindow.setScene(aboutScene);
         aboutWindow.show();
     }
@@ -378,13 +377,12 @@ public class MainController {
         errorWindow.initModality(Modality.WINDOW_MODAL);
         Button closeButton = new Button("Close");
         closeButton.setOnAction(e -> errorWindow.close());
-        Scene errorScene = new Scene(VBoxBuilder.create()
-                .children(new Text(message), closeButton)
-                .alignment(Pos.CENTER)
-                .padding(new Insets(10))
-                .spacing(5)
-                .build()
-        );
+        VBox errorVBox = new VBox();
+        errorVBox.getChildren().addAll(new Text(message), closeButton);
+        errorVBox.setAlignment(Pos.CENTER);
+        errorVBox.setPadding(new Insets(10));
+        errorVBox.setSpacing(5);
+        Scene errorScene = new Scene(errorVBox);
         errorWindow.setScene(errorScene);
         errorWindow.show();
     }

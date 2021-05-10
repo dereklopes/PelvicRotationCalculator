@@ -84,7 +84,7 @@ class Result implements Serializable {
         this.s2RotationDegree = new SimpleDoubleProperty(round(rotationDegreeRads * radToDeg, 1));
 
         // Calculate rotational degree with MFH as axis of rotation
-        this.MFHAPMagFactor = round(focalFilmDistance / (focalFilmDistance - s2ToFilmAP), 2);
+        this.MFHAPMagFactor = round(this.focalFilmDistance.get() / (this.focalFilmDistance.get() - this.s2ToFilmAP.get()), 2);
         this.MFHs2ToMFHOffset = new SimpleDoubleProperty(round(this.s2ToMFHAPFilm.get() / this.MFHAPMagFactor, 2));
         opOverHyp = round(this.MFHs2ToMFHOffset.doubleValue() / this.s2ToMFHTrue.doubleValue(), 3);
         rotationDegreeRads = StrictMath.asin(opOverHyp);
