@@ -35,7 +35,7 @@ Use the "Name" input field to help you differentiate between calculations.
 
 ### Saving
 
-To save your calculations, click the "File" tab on the menu bar to open a drop down menu and select "Save" (keyboard shortcut ctrl + s on windows, command + s on mac). If you are saving for the first time, a file selection window will open to select a destination to save your calculations. If you are saving and already saved calcuation, it will automatically save to the original file.
+To save your calculations, click the "File" tab on the menu bar to open a drop down menu and select "Save" (keyboard shortcut ctrl + s on windows, command + s on mac). If you are saving for the first time, a file selection window will open to select a destination to save your calculations. If you are saving and already saved calculation, it will automatically save to the original file.
 
 To save to a new location, select the "Save as..." option under the "File" tab on the menu bar (keyboard shortcut ctrl + shift + s on windows, command + shift + s on mac). This will always ask you to choose a location to save to.
 
@@ -57,6 +57,12 @@ There are 3 ways to delete a result. First, select the result you wish to delete
 3. Press the keyboard shortcut ctrl + backspace on windows or command + delete on mac
 
 ## Run Issues
+
+### Windows
+
+Error: PelvicRotationCalculator.jar does not open
+
+Fix: Uninstall all versions of Java on your system, then reinstall by downloading it [here](https://java.com/download).
 
 ### Mac OS
 

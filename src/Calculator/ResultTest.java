@@ -59,6 +59,32 @@ class ResultTest {
         assertEquals(4.3, result.s2RotationDegreeProperty().get(), 0.01);
     }
 
+	@Test
+	void resultTest2() {
+		String name = "test2";
+		double focalFilmDistance = 84;
+		String focalFilmDistanceUnits = "in";
+		double s2ToFilmLateral = 250.44;
+		String s2ToFilmLateralUnits = "mm";
+		double s2ToMFHLateralFilm = 93.67;
+		String s2ToMFHLateralFilmUnits = "mm";
+		double s2ToFilmAP = 149.65;
+		String s2ToFilmAPUnits = "mm";
+		double s2ToMFHAPFilm = 3.92;
+		String s2ToMFHAPFilmUnits = "mm";
+		String resultsUnits = "mm";
+		Result result = new Result(name, focalFilmDistance, s2ToFilmLateral, s2ToMFHLateralFilm, s2ToFilmAP,
+			s2ToMFHAPFilm, focalFilmDistanceUnits, s2ToFilmLateralUnits, s2ToMFHLateralFilmUnits, s2ToFilmAPUnits,
+			s2ToMFHAPFilmUnits, resultsUnits);
+
+		assertEquals(250.44, result.s2ToFilmLateralProperty().get(), 0.01);
+		assertEquals(82.89, result.s2ToMFHTrueProperty().get(), 0.01);
+		assertEquals(3.5, result.s2s2ToMFHOffsetProperty().get(), 0.01);
+		assertEquals(2.4, result.s2RotationDegreeProperty().get(), 0.01);
+		assertEquals(3.63, result.MFHs2ToMFHOffsetProperty().get(), 0.01);
+		assertEquals(2.5, result.MFHRotationDegreeProperty().get(), 0.01);
+	}
+
     @Test
     void saveAndLoadTest() {
         // Example from Research Paper
