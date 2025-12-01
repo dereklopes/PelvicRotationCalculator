@@ -10,7 +10,7 @@ It is written in Java with JavaFX so that it can easily be run on any device wit
 
 ## Prerequisites
 
-The Java Runtime Environment is required to run this application. The build bundles OpenJFX 21 so it works with OpenJDK releases that no longer include JavaFX by default. Use a Java 17+ JDK (with the `jpackage` tool) to produce platform-specific installers.
+The Java Runtime Environment is required to run this application. The build bundles OpenJFX 21 so it works with OpenJDK releases that no longer include JavaFX by default. **Building requires Java 17 or newer** because JavaFX 21 and the `jpackage` tool are used during packaging. Running on older JDKs will fail with errors like `invalid target release: 17`.
 
 To install Java or update to the latest version, download it [here](https://java.com/download).
 
