@@ -10,15 +10,29 @@ It is written in Java with JavaFX so that it can easily be run on any device wit
 
 ## Prerequisites
 
-The Java Runtime Environment is required to run this application. Older versions may work, but it is recommended that you keep your Java version up to date.
+The Java Runtime Environment is required to run this application. The build bundles OpenJFX 21 so it works with OpenJDK releases that no longer include JavaFX by default. Use a Java 17+ JDK (with the `jpackage` tool) to produce platform-specific installers.
 
 To install Java or update to the latest version, download it [here](https://java.com/download).
 
 ## Installation
 
-Click [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/out/build/PelvicRotationCalculator.jar) to download the jar file.
+### Building native executables
 
-To run, simply open the downloaded program file.
+The project uses `jpackage` to create platform installers with the JavaFX runtime embedded. Build the appropriate bundle on the target operating system:
+
+- **Windows (.exe)**
+  ```
+  mvn clean package -P windows-bundle
+  ```
+  The installer executable is written to `target/dist/windows/`.
+
+- **macOS (.dmg)**
+  ```
+  mvn clean package -P mac-bundle
+  ```
+  The disk image is written to `target/dist/mac/`.
+
+If you only need a local runnable image without an installer, run `mvn clean package` without a profile to generate a Java 17 app image under `target/dist/linux/`.
 
 ## Usage Instructions
 
@@ -60,15 +74,12 @@ There are 3 ways to delete a result. First, select the result you wish to delete
 
 ### Windows
 
-Error: PelvicRotationCalculator.jar does not open
+If SmartScreen blocks the installer, click "More info" and then "Run anyway" to launch the bundled executable.
 
-Fix: Uninstall all versions of Java on your system, then reinstall by downloading it [here](https://java.com/download).
+### macOS
 
-### Mac OS
-
-Error: `"PelvicRotationCalculator.jar" can't be opened because it is from an unidentified developer."`
-
-Fix: Go to `System Preferences->Security & Privacy->General` and click on `Open Anyway`
+If Gatekeeper blocks the `.dmg` from opening, go to `System Preferences -> Security & Privacy -> General` and click on `Open Any
+way`.
 
 ## Contributions
 
@@ -77,5 +88,5 @@ To contribute, please open a pull request. New code must have unit tests or the 
 ## TODO
 
 - Tool tips to help with correlating input fields to real world measurements (currently found in instruction PDF)
-- Properly sign JAR
+- Properly sign native installers
 - Setting of the application "dock name" on Mac OS (currently shows as `java`)
