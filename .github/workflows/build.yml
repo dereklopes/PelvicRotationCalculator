@@ -28,6 +28,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Sanitize ref name for filename
+        id: ver
+        shell: bash
+        run: |
+          value="${{ github.ref_name }}"
+          echo "value=${value//\//-}" >> "$GITHUB_OUTPUT"
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -62,17 +69,17 @@ jobs:
 
       - name: Archive artifact (Linux and macOS)
         if: runner.os != 'Windows'
-        run: zip -r target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ github.ref_name }}.zip target/dist/
+        run: zip -r target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ steps.ver.outputs.value }}.zip target/dist/
 
       - name: Archive artifact (Windows)
         if: runner.os == 'Windows'
-        run: Compress-Archive -Path target/dist/* -DestinationPath target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ github.ref_name }}.zip
+        run: Compress-Archive -Path target/dist/* -DestinationPath target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ steps.ver.outputs.value }}.zip
 
       - name: Upload packaged application
         uses: actions/upload-artifact@v4
         with:
           name: PelvicRotationCalculator-${{ matrix.artifact-name }}
-          path: target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ github.ref_name }}.zip
+          path: target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ steps.ver.outputs.value }}.zip
           if-no-files-found: error
 
   release:
