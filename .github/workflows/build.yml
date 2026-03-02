@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact-name: ubuntu
+            artifact-name: linux
           - os: windows-latest
             artifact-name: windows
           - os: macos-latest
