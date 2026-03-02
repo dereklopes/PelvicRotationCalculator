@@ -3,6 +3,7 @@ name: Build and Package
 on:
   push:
     branches: ["**"]
+    tags: ["v*"]
   pull_request:
     branches: [main, master]
 
@@ -51,9 +52,38 @@ jobs:
             --module Calculator/Calculator.CalculatorApplication `
             --dest target/dist
 
+      - name: Archive artifact (Linux and macOS)
+        if: runner.os != 'Windows'
+        run: zip -r target/PelvicRotationCalculator-${{ matrix.os }}.zip target/dist/
+
+      - name: Archive artifact (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path target/dist/* -DestinationPath target/PelvicRotationCalculator-${{ matrix.os }}.zip
+
       - name: Upload packaged application
         uses: actions/upload-artifact@v4
         with:
           name: PelvicRotationCalculator-${{ matrix.os }}
-          path: target/dist/
+          path: target/PelvicRotationCalculator-${{ matrix.os }}.zip
           if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          merge-multiple: false
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*.zip
+          generate_release_notes: true
