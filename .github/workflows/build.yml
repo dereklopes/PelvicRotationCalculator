@@ -14,8 +14,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, macos-13]
         include:
+          - os: ubuntu-latest
+            artifact-name: ubuntu
+          - os: windows-latest
+            artifact-name: windows
+          - os: macos-latest
+            artifact-name: macos
           - os: macos-13
             artifact-name: macos-intel
 
@@ -57,17 +62,17 @@ jobs:
 
       - name: Archive artifact (Linux and macOS)
         if: runner.os != 'Windows'
-        run: zip -r target/PelvicRotationCalculator-${{ matrix.artifact-name || matrix.os }}.zip target/dist/
+        run: zip -r target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ github.ref_name }}.zip target/dist/
 
       - name: Archive artifact (Windows)
         if: runner.os == 'Windows'
-        run: Compress-Archive -Path target/dist/* -DestinationPath target/PelvicRotationCalculator-${{ matrix.artifact-name || matrix.os }}.zip
+        run: Compress-Archive -Path target/dist/* -DestinationPath target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ github.ref_name }}.zip
 
       - name: Upload packaged application
         uses: actions/upload-artifact@v4
         with:
-          name: PelvicRotationCalculator-${{ matrix.artifact-name || matrix.os }}
-          path: target/PelvicRotationCalculator-${{ matrix.artifact-name || matrix.os }}.zip
+          name: PelvicRotationCalculator-${{ matrix.artifact-name }}
+          path: target/PelvicRotationCalculator-${{ matrix.artifact-name }}-${{ github.ref_name }}.zip
           if-no-files-found: error
 
   release:
