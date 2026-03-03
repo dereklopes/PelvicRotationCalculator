@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [main, master]
 
+env:
+  JAVAFX_VERSION: "21.0.2"
+
 jobs:
   build:
     name: Build on ${{ matrix.os }}
@@ -17,10 +20,13 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact-name: linux
+            fx-platform: linux-x64
           - os: windows-latest
             artifact-name: windows
+            fx-platform: windows-x64
           - os: macos-latest
             artifact-name: macos
+            fx-platform: osx-aarch64
 
     steps:
       - name: Checkout repository
@@ -43,6 +49,13 @@ jobs:
       - name: Build and test with Maven
         run: mvn -B package --no-transfer-progress
 
+      - name: Download OpenJFX jmods
+        shell: bash
+        run: |
+          curl -fL -o javafx-jmods.zip \
+            "https://download2.gluonhq.com/openjfx/${{ env.JAVAFX_VERSION }}/openjfx-${{ env.JAVAFX_VERSION }}_${{ matrix.fx-platform }}_bin-jmods.zip"
+          unzip -q javafx-jmods.zip
+
       - name: Package with jpackage (Linux and macOS)
         if: runner.os != 'Windows'
         run: |
@@ -50,9 +63,8 @@ jobs:
             --type app-image \
             --name PelvicRotationCalculator \
             --app-version 1.0.0 \
-            --module-path "target/pelvic-rotation-calculator-1.0.0.jar:target/lib" \
+            --module-path "target/pelvic-rotation-calculator-1.0.0.jar:javafx-jmods-${{ env.JAVAFX_VERSION }}" \
             --module Calculator/Calculator.CalculatorApplication \
-            --verbose \
             --dest target/dist
 
       - name: Package with jpackage (Windows)
@@ -62,7 +74,7 @@ jobs:
             --type app-image `
             --name PelvicRotationCalculator `
             --app-version 1.0.0 `
-            --module-path "target/pelvic-rotation-calculator-1.0.0.jar;target/lib" `
+            --module-path "target/pelvic-rotation-calculator-1.0.0.jar;javafx-jmods-${{ env.JAVAFX_VERSION }}" `
             --module Calculator/Calculator.CalculatorApplication `
             --dest target/dist
 
