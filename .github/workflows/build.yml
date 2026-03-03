@@ -21,8 +21,6 @@ jobs:
             artifact-name: windows
           - os: macos-latest
             artifact-name: macos
-          - os: macos-13
-            artifact-name: macos-intel
 
     steps:
       - name: Checkout repository
@@ -44,10 +42,6 @@ jobs:
 
       - name: Build and test with Maven
         run: mvn -B package --no-transfer-progress
-
-      - name: Select Xcode (macOS Intel)
-        if: matrix.artifact-name == 'macos-intel'
-        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
       - name: Package with jpackage (Linux and macOS)
         if: runner.os != 'Windows'
