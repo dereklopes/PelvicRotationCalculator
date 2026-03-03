@@ -45,6 +45,10 @@ jobs:
       - name: Build and test with Maven
         run: mvn -B package --no-transfer-progress
 
+      - name: Select Xcode (macOS Intel)
+        if: matrix.artifact-name == 'macos-intel'
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
       - name: Package with jpackage (Linux and macOS)
         if: runner.os != 'Windows'
         run: |
@@ -54,6 +58,7 @@ jobs:
             --app-version 1.0.0 \
             --module-path "target/pelvic-rotation-calculator-1.0.0.jar:target/lib" \
             --module Calculator/Calculator.CalculatorApplication \
+            --verbose \
             --dest target/dist
 
       - name: Package with jpackage (Windows)
