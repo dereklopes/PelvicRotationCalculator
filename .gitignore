@@ -4,3 +4,4 @@ lib/
 src/META-INF/
 *.DS_Store
 *.class
+target/

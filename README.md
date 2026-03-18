@@ -68,7 +68,11 @@ Fix: Uninstall all versions of Java on your system, then reinstall by downloadin
 
 Error: `"PelvicRotationCalculator.jar" can't be opened because it is from an unidentified developer."`
 
-Fix: Go to `System Preferences->Security & Privacy->General` and click on `Open Anyway`
+or
+
+Error:: `"PelvicRotationCalculator.jar" Not Opened Apple could not verify "PelvicRotationCalculator" is free of malware that may harm your Mac or compromise your privacy.`
+
+Fix: Go to `System Preferences->Privacy & Security`, scroll down, and click on `Open Anyway`
 
 ## Contributions
 
