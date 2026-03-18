@@ -49,11 +49,22 @@ jobs:
             "https://download2.gluonhq.com/openjfx/${{ env.JAVAFX_VERSION }}/openjfx-${{ env.JAVAFX_VERSION }}_${{ matrix.fx-platform }}_bin-jmods.zip"
           unzip -q javafx-jmods.zip
 
-      - name: Package with jpackage (Linux and macOS)
-        if: runner.os != 'Windows'
+      - name: Package with jpackage (Linux)
+        if: runner.os == 'Linux'
         run: |
           jpackage \
             --type app-image \
+            --name PelvicRotationCalculator \
+            --app-version 1.0.0 \
+            --module-path "target/pelvic-rotation-calculator-1.0.0.jar:javafx-jmods-${{ env.JAVAFX_VERSION }}" \
+            --module Calculator/Calculator.CalculatorApplication \
+            --dest target/dist
+
+      - name: Package with jpackage (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          jpackage \
+            --type dmg \
             --name PelvicRotationCalculator \
             --app-version 1.0.0 \
             --module-path "target/pelvic-rotation-calculator-1.0.0.jar:javafx-jmods-${{ env.JAVAFX_VERSION }}" \
@@ -97,11 +108,18 @@ jobs:
         run: |
           for dir in artifacts/PelvicRotationCalculator-*/; do
             name=$(basename "$dir")
-            (cd "$dir" && zip -r "../../${name}-${{ github.ref_name }}.zip" .)
+            dmg=$(find "$dir" -name "*.dmg" -print -quit)
+            if [ -n "$dmg" ]; then
+              cp "$dmg" "${name}-${{ github.ref_name }}.dmg"
+            else
+              (cd "$dir" && zip -r "../../${name}-${{ github.ref_name }}.zip" .)
+            fi
           done
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: "*.zip"
+          files: |
+            *.zip
+            *.dmg
           generate_release_notes: true
