@@ -6,19 +6,35 @@ It has been developed for the non-profit [Gonstead Clinical Studies Society](gon
 
 The methodology is based on [this article](https://github.com/dereklopes/PelvicRotationCalculator/blob/master/Pelvic%20Rotation%20article.pdf).
 
-It is written in Java with JavaFX so that it can easily be run on any device with Java installed.
+It is written in Java with JavaFX.
 
 ## Prerequisites
 
-The Java Runtime Environment is required to run this application. Older versions may work, but it is recommended that you keep your Java version up to date.
-
-To install Java or update to the latest version, download it [here](https://java.com/download).
+Java 21 or later is required. Download it [here](https://java.com/download).
 
 ## Installation
 
-Click [here](https://github.com/dereklopes/PelvicRotationCalculator/raw/master/out/build/PelvicRotationCalculator.jar) to download the jar file.
+Download the latest release for your platform:
 
-To run, simply open the downloaded program file.
+- [Windows](https://github.com/dereklopes/PelvicRotationCalculator/releases/download/v1.2/PelvicRotationCalculator-windows-v1.2.zip)
+- [macOS](https://github.com/dereklopes/PelvicRotationCalculator/releases/download/v1.2/PelvicRotationCalculator-macos-v1.2.dmg)
+- [Linux](https://github.com/dereklopes/PelvicRotationCalculator/releases/download/v1.2/PelvicRotationCalculator-linux-v1.2.zip)
+
+### Windows
+
+1. Extract the downloaded `.zip` file
+2. Open the extracted folder and launch `PelvicRotationCalculator.exe`
+
+### macOS
+
+1. Open the downloaded `.dmg` file
+2. Drag `PelvicRotationCalculator` to your Applications folder
+3. On first launch, macOS may block the app. Go to `System Preferences -> Privacy & Security`, scroll down, and click on `Open Anyway`
+
+### Linux
+
+1. Extract the downloaded `.zip` file
+2. Open the extracted folder and run the `PelvicRotationCalculator` binary
 
 ## Usage Instructions
 
